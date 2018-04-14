@@ -1,11 +1,8 @@
+YS 4/14/2018
 
-Generate new blocks 
+Updates: 
+Separate files to main, block, http, transaction;
+Combined TCP and HTTP, so when app launched, both server are running
 
-```
-curl -H "Content-Type: application/json" -X POST -d '{"BPM":55}' http://localhost:8080
-```
-
-
-```
-// https://medium.com/@mycoralhealth/code-your-own-blockchain-in-less-than-200-lines-of-go-e296282bcffc
-```
+HTTP Server port: 8881
+TCP Server port: 9991
