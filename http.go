@@ -50,8 +50,11 @@ func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
 }
 
 type Message struct {
-	BPM int
+	BPM []Transaction
 }
+
+
+//YS: TODO: modify this function to take jason obj and convert to []Transaction
 
 func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
 	var m Message

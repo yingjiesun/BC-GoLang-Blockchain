@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"time"
+	"encoding/json"
 )
 
 
@@ -36,7 +37,14 @@ func replaceChain(newBlocks []Block) {
 
 // SHA256 hasing
 func calculateHash(block Block) string {
-	record := string(block.Index) + block.Timestamp + string(block.BPM) + block.PrevHash
+
+	a := &block.BPM
+	block_data, err := json.Marshal(a)
+	if err != nil {
+        panic (err)
+    }
+
+	record := string(block.Index) + block.Timestamp + string(block_data) + block.PrevHash
 	h := sha256.New()
 	h.Write([]byte(record))
 	hashed := h.Sum(nil)
@@ -44,7 +52,7 @@ func calculateHash(block Block) string {
 }
 
 // create a new block using previous block's hash
-func generateBlock(oldBlock Block, BPM int) (Block, error) {
+func generateBlock(oldBlock Block, BPM []Transaction) (Block, error) {
 
 	var newBlock Block
 

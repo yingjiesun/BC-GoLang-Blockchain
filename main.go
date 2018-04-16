@@ -10,6 +10,8 @@ import (
 
 var Blockchain []Block
 
+var genesisBlock_data = []Transaction {	Transaction{ transactionId: "This is Genesis Blok!"	} }
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -18,7 +20,7 @@ func main() {
 	
 	go func() {
 		t := time.Now()
-		genesisBlock := Block{0, t.String(), 0, "", ""}
+		genesisBlock := Block{0, t.String(), genesisBlock_data, "", ""}
 		spew.Dump(genesisBlock)
 		Blockchain = append(Blockchain, genesisBlock)		
 		

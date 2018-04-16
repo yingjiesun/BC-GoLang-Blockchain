@@ -9,7 +9,7 @@ import (
 	"log"
 	"net"
 	"os"
-	"strconv"
+	//"strconv"
 	"sync"
 	"time"
 	"fmt"
@@ -94,14 +94,21 @@ func handleConn(conn net.Conn) {
 
 	defer conn.Close()
 
-	io.WriteString(conn, "Enter a new BPM:")
+	io.WriteString(conn, "Enter a new transaction:")
 
 	scanner := bufio.NewScanner(conn)
 
 	// take in BPM from stdin and add it to blockchain after conducting necessary validation
+	
+	/*
+	
+	YS: old code using BPM
+	
 	go func() {
 		for scanner.Scan() {
+			
 			bpm, err := strconv.Atoi(scanner.Text())
+			
 			if err != nil {
 				log.Printf("%v not a number: %v", scanner.Text(), err)
 				continue
@@ -117,7 +124,35 @@ func handleConn(conn net.Conn) {
 			}
 
 			bcServer <- Blockchain
-			io.WriteString(conn, "\nEnter a new BPM:")
+			io.WriteString(conn, "\nEnter a new transaction:")
+		}
+	}()
+	
+	*/
+	
+	go func() {
+		for scanner.Scan() {
+						
+			// YS: get user input and create []Transaction
+			//bpm, err := strconv.Atoi(scanner.Text())
+			
+			input_data := string(scanner.Text())
+			
+			var transaction_data = []Transaction {	Transaction{ transactionId: input_data	} }
+			
+			newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], transaction_data)
+		
+			if err != nil {
+				panic (err)
+			}
+		
+			if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
+				newBlockchain := append(Blockchain, newBlock)
+				replaceChain(newBlockchain)
+			}
+
+			bcServer <- Blockchain
+			io.WriteString(conn, "\nEnter a new transaction:")
 		}
 	}()
 
