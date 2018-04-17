@@ -1,15 +1,15 @@
-YS 4/16/2018
-Break project to multiple files
-Add transaction.go
-Modify block.go to have transactions array
-Modify TCP to accept new blocks in new format
-Add nounce to block
-Add DIFFICULTY in .env, 5 leading 0s now
-Add POW
+YS 4/16/2018<BR>
+Break project to multiple files<BR>
+Add transaction.go<BR>
+Modify block.go to have transactions array<BR>
+Modify TCP to accept new blocks in new format<BR>
+Add nounce to block<BR>
+Add DIFFICULTY in .env, 5 leading 0s now<BR>
+Add POW<BR>
 
-YS 4/14/2018
-Updates: 
-Separated files to main, block, http, transaction;
-Both Http TCP server starts when app is launched
-HTTP Server port: 8881
-TCP Server port: 9991
+YS 4/14/2018<BR>
+Updates:<BR> 
+Separated files to main, block, http, transaction;<BR>
+Both Http TCP server starts when app is launched<BR>
+HTTP Server port: 8881<BR>
+TCP Server port: 9991<BR>
