@@ -8,10 +8,8 @@ import (
 	"net/http"
 	"os"
 	"time"
-
 	"github.com/davecgh/go-spew/spew"
-	"github.com/gorilla/mux"
-	
+	"github.com/gorilla/mux"	
 )
 
 func run() error {
@@ -50,11 +48,17 @@ func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
 }
 
 type Message struct {
-	BPM []Transaction
+	transactions []Transaction
 }
 
 
-//YS: TODO: modify this function to take jason obj and convert to []Transaction
+/*
+
+YS: 
+TODO: modify this function to take jason obj and convert to []Transaction
+For now a new block generated at same time. In future new block is triggered by time.
+
+*/
 
 func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
 	var m Message
@@ -66,7 +70,7 @@ func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], m.BPM)
+	newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], m.transactions)
 	if err != nil {
 		respondWithJSON(w, r, http.StatusInternalServerError, m)
 		return
@@ -78,7 +82,6 @@ func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondWithJSON(w, r, http.StatusCreated, newBlock)
-
 }
 
 func respondWithJSON(w http.ResponseWriter, r *http.Request, code int, payload interface{}) {

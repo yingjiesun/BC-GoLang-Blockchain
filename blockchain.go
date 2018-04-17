@@ -6,8 +6,12 @@ import (
 	"encoding/hex"
 	"time"
 	"encoding/json"
+	"os"
+	"strconv"
 )
 
+//YS: nounce will get value in calculateHash()
+var nounce int
 
 // make sure block is valid by checking index, and comparing the hash of the previous block
 func isBlockValid(newBlock, oldBlock Block) bool {
@@ -35,24 +39,52 @@ func replaceChain(newBlocks []Block) {
 	mutex.Unlock()
 }
 
+/*
+
+YS: 
+Add Nounce to generate qualified hash, DIFFICULTY is from .env file
+(GoLang allows a function to return two values, Nounce and hash can be returned at same time)
+
+*/
+
 // SHA256 hasing
 func calculateHash(block Block) string {
 
-	a := &block.BPM
+	returnValue := "NOT ME"
+	difficulty, err := strconv.Atoi(os.Getenv("DIFFICULTY"))
+	nounce = -1
+	
+	a := &block.Transactions
 	block_data, err := json.Marshal(a)
 	if err != nil {
         panic (err)
     }
+	
+	requiredLeadings := getRequiredString(difficulty)
+	currentLeading := "XXXXXXXXXXXXXXXXXXXXXXXXX"
+	for currentLeading != requiredLeadings {
+		nounce++
+		record := string(block.Index) + block.Timestamp + string(block_data) + block.PrevHash + string(nounce)
+		h := sha256.New()		
+		h.Write([]byte(record))
+		hashed := h.Sum(nil)
+		returnValue = hex.EncodeToString(hashed)
+		currentLeading = string(returnValue[0:difficulty])		
+	}
+	return returnValue
+}
 
-	record := string(block.Index) + block.Timestamp + string(block_data) + block.PrevHash
-	h := sha256.New()
-	h.Write([]byte(record))
-	hashed := h.Sum(nil)
-	return hex.EncodeToString(hashed)
+//YS: generate string of required leading 0s 
+func getRequiredString(n int) string {
+    b := make([]rune, n)
+    for i := range b {
+        b[i] = '0'
+    }
+    return string(b)
 }
 
 // create a new block using previous block's hash
-func generateBlock(oldBlock Block, BPM []Transaction) (Block, error) {
+func generateBlock(oldBlock Block, transactions []Transaction) (Block, error) {
 
 	var newBlock Block
 
@@ -60,9 +92,13 @@ func generateBlock(oldBlock Block, BPM []Transaction) (Block, error) {
 
 	newBlock.Index = oldBlock.Index + 1
 	newBlock.Timestamp = t.String()
-	newBlock.BPM = BPM
-	newBlock.PrevHash = oldBlock.Hash
+	newBlock.Transactions = transactions
+	newBlock.PrevHash = oldBlock.Hash	
 	newBlock.Hash = calculateHash(newBlock)
+	
+	//YS: TODO: Nounce should be generated while calculating hash
+	
+	newBlock.Nounce = nounce
 
 	return newBlock, nil
 }

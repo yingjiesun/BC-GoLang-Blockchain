@@ -2,24 +2,17 @@ package main
 
 import (
 	"bufio"
-	//"crypto/sha256"
-	//"encoding/hex"
 	"encoding/json"
 	"io"
 	"log"
 	"net"
-	"os"
-	//"strconv"
+	"os"	
 	"sync"
 	"time"
 	"fmt"
 	"strings"
 	"github.com/davecgh/go-spew/spew"
-	//"github.com/joho/godotenv"
-	
-	//"bytes"
-    //"io/ioutil"
-   // "net/http"
+	//"strconv"
 )
 
 
@@ -98,7 +91,7 @@ func handleConn(conn net.Conn) {
 
 	scanner := bufio.NewScanner(conn)
 
-	// take in BPM from stdin and add it to blockchain after conducting necessary validation
+	// take in transactions from stdin and add it to blockchain after conducting necessary validation
 	
 	/*
 	
@@ -134,7 +127,6 @@ func handleConn(conn net.Conn) {
 		for scanner.Scan() {
 						
 			// YS: get user input and create []Transaction
-			//bpm, err := strconv.Atoi(scanner.Text())
 			
 			input_data := string(scanner.Text())
 			
@@ -173,7 +165,6 @@ func handleConn(conn net.Conn) {
 	for _ = range bcServer {
 		spew.Dump(Blockchain)
 	}
-
 }
 
 

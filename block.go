@@ -3,8 +3,8 @@ package main
 type Block struct {
 	Index     int
 	Timestamp string
-	//BPM       int
-	BPM       []Transaction
+	Transactions       []Transaction
 	Hash      string
 	PrevHash  string
+	Nounce    int
 }
