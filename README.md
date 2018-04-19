@@ -1,5 +1,7 @@
 YS 4/19/2018<BR>
 Added BLOCKINTERVAL=5 to .env<BR>
+Timestamp string in transactioin.go<BR>
+Updated tcp.go to generate timestamp for transaction
 
 YS 4/18/2018<BR>
 Added temp_trans to main.go, to hold temp transactions that are not saved in blockchain yet<BR>

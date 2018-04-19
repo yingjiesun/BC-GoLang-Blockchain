@@ -130,7 +130,9 @@ func handleConn(conn net.Conn) {
 			
 			input_data := string(scanner.Text())
 			
-			var transaction_data = []Transaction {	Transaction{ transactionId: input_data	} }
+			t := time.Now()
+			
+			transaction_data := []Transaction {	Transaction{ transactionId: input_data, Timestamp: t.String()}}
 			
 			newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], transaction_data)
 		

@@ -94,10 +94,7 @@ func generateBlock(oldBlock Block, transactions []Transaction) (Block, error) {
 	newBlock.Timestamp = t.String()
 	newBlock.Transactions = transactions
 	newBlock.PrevHash = oldBlock.Hash	
-	newBlock.Hash = calculateHash(newBlock)
-	
-	//YS: TODO: Nounce should be generated while calculating hash
-	
+	newBlock.Hash = calculateHash(newBlock)	
 	newBlock.Nounce = nounce
 
 	return newBlock, nil
