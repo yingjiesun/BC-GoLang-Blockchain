@@ -1,6 +1,6 @@
 YS 4/19/2018<BR>
 Added BLOCKINTERVAL=5 to .env<BR>
-Timestamp string in transactioin.go<BR>
+Added Timestamp in transactioin.go<BR>
 Updated tcp.go to generate timestamp for transaction
 
 YS 4/18/2018<BR>
@@ -21,3 +21,13 @@ Separated files to main, block, http, transaction;<BR>
 Both Http TCP server starts when app is launched<BR>
 HTTP Server port: 8881<BR>
 TCP Server port: 9991<BR>
+
+
+
+To see blockchain in browser:
+http://localhost:8881
+
+To add block and simulate TCP network:
+in windows command terminal, go to nc(you may need download nc) folder, type
+nc localhost 9991
+and enter any sting(will be transaction ID for now)
