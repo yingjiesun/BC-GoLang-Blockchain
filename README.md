@@ -1,3 +1,6 @@
+YS 4/19/2018<BR>
+Added BLOCKINTERVAL=5 to .env<BR>
+
 YS 4/18/2018<BR>
 Added temp_trans to main.go, to hold temp transactions that are not saved in blockchain yet<BR>
 
