@@ -1,4 +1,4 @@
-YS 4/16/2018<BR>
+YS 4/18/2018<BR>
 Added temp_trans to main.go, to hold temp transactions that are not saved in blockchain yet<BR>
 
 YS 4/16/2018<BR>
