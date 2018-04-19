@@ -12,6 +12,9 @@ var Blockchain []Block
 
 var genesisBlock_data = []Transaction {	Transaction{ transactionId: "This is Genesis Blok!"	} }
 
+//YS: to hold transactions that are not saved in block yet
+var temp_trans []Transaction 
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {
