@@ -24,10 +24,10 @@ TCP Server port: 9991<BR>
 
 
 
-To see blockchain in browser:
-http://localhost:8881
+To see blockchain in browser:<BR>
+http://localhost:8881<BR>
 
-To add block and simulate TCP network:
-in windows command terminal, go to nc(you may need download nc) folder, type
-nc localhost 9991
-and enter any sting(will be transaction ID for now)
+To add block and simulate TCP network:<BR>
+in windows command terminal, go to nc(you may need download nc) folder, type<BR>
+nc localhost 9991<BR>
+and enter any sting(will be transaction ID for now)<BR>
