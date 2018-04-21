@@ -84,7 +84,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<mainClass>
-						com.spstudio.bd.App
+						com.bcgeek.web.App
 					</mainClass>
 				</configuration>
 				<executions>
