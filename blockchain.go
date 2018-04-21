@@ -8,10 +8,13 @@ import (
 	"encoding/json"
 	"os"
 	"strconv"
+	"fmt"
+	"sync"
 )
 
 //YS: nounce will get value in calculateHash()
 var nounce int
+var mutex = &sync.Mutex{}
 
 // make sure block is valid by checking index, and comparing the hash of the previous block
 func isBlockValid(newBlock, oldBlock Block) bool {
@@ -35,8 +38,10 @@ func replaceChain(newBlocks []Block) {
 	mutex.Lock()
 	if len(newBlocks) > len(Blockchain) {
 		Blockchain = newBlocks
+		fmt.Println("Blockchain replaced by longer one")
 	}
 	mutex.Unlock()
+	
 }
 
 /*
