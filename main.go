@@ -9,8 +9,8 @@ import (
 )
 
 var Blockchain []Block
-
-var genesisBlock_data = []Transaction {	Transaction{ transactionId: "This is Genesis Blok!"	} }
+var t = time.Now()
+var genesisBlock_data = []Transaction {	Transaction{ TransactionId: "This is Genesis Blok!"	, Timestamp: t.String()} }
 
 //YS: to hold transactions that are not saved in block yet
 var temp_trans []Transaction 

@@ -1,7 +1,12 @@
+YS 4/21/2018<BR>
+Added testing code to randomly create block in 30-90 seconds, with local IP as TransactionID<BR>
+Fixed a bug, transaction.go transactionIT should be TransactionID<BR>
+Updated main.go tcp.go transaction.go<BR>
+
 YS 4/19/2018<BR>
 Added BLOCKINTERVAL=5 to .env<BR>
 Added Timestamp in transactioin.go<BR>
-Updated tcp.go to generate timestamp for transaction
+Updated tcp.go to generate timestamp for transaction<BR>
 
 YS 4/18/2018<BR>
 Added temp_trans to main.go, to hold temp transactions that are not saved in blockchain yet<BR>

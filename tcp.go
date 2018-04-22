@@ -26,6 +26,7 @@ import (
 	"bytes"
     "io/ioutil"
     "net/http"	
+	"math/rand"
 )
 
 
@@ -52,7 +53,46 @@ func Runtcp() error {
 	fmt.Println("My External IP: " + ext_ip );
 	fmt.Println("My Internal IP: " + lan_ip );		
 	
+	/*
+	YS: Remove code below, this is for testing to generate block randomly in 30-90 seconds 
+	*/
+	go func(){		
+		
+		for {
+			t := time.Now()
+			fmt.Println("Start creating new block")
+			
+			transaction_data := []Transaction {	Transaction{ TransactionId: lan_ip, Timestamp: t.String()}}
+			newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], transaction_data)
+			
+			if err != nil {
+				//panic (err)
+				fmt.Println("Error creating new block")
+			}
+		
+			if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
+			
+				newBlockchain := append(Blockchain, newBlock)
+								
+				replaceChain(newBlockchain)
+				
+				fmt.Println("====NEW BLOCK CREATED AND ADDED!====")
+				spew.Dump(Blockchain)
+			} else {
+				fmt.Println("INVALID block")
+			}
+			
+			time.Sleep(time.Duration(rand.Intn(60) + 30) * time.Second)	
+		}
+		
+	}()
+	
+	//YS: END of remove code
+	
 	go dialConn()	
+	
+	
+	
 	
 	//YS: create a new connection each time a connection request is received, and serve it. 
 	for {
@@ -120,6 +160,12 @@ func dialConn() {
 	
 	for {		
 		for i := range ip_pool{
+		
+			//YS: do not dial itself
+			if (ip_pool[i] == lan_ip) {
+				continue
+			}
+			
 			conn, err := net.Dial("tcp", ip_pool[i] + ":" + os.Getenv("ADDRTCP"))
 			if err != nil {
 				fmt.Println("CONNECTION ERROR:", err.Error())
@@ -186,7 +232,7 @@ func handleConn(conn net.Conn) {
 			
 			t := time.Now()
 			
-			transaction_data := []Transaction {	Transaction{ transactionId: input_data, Timestamp: t.String()}}
+			transaction_data := []Transaction {	Transaction{ TransactionId: input_data, Timestamp: t.String()}}
 			
 			//YS: using the transaction received from other node to generate block
 			

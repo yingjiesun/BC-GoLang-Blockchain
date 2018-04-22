@@ -35,6 +35,10 @@ func isBlockValid(newBlock, oldBlock Block) bool {
 
 // make sure the chain we're checking is longer than the current blockchain
 func replaceChain(newBlocks []Block) {
+	
+	fmt.Println("Current blockchain length: " + strconv.Itoa(len(Blockchain)))	
+	fmt.Println("New blockchain length: " + strconv.Itoa(len(newBlocks)))	
+		
 	mutex.Lock()
 	if len(newBlocks) > len(Blockchain) {
 		Blockchain = newBlocks
@@ -97,7 +101,10 @@ func generateBlock(oldBlock Block, transactions []Transaction) (Block, error) {
 
 	newBlock.Index = oldBlock.Index + 1
 	newBlock.Timestamp = t.String()
+	
+	//YS: is this kind of assigment correct in golang?
 	newBlock.Transactions = transactions
+	
 	newBlock.PrevHash = oldBlock.Hash	
 	newBlock.Hash = calculateHash(newBlock)	
 	newBlock.Nounce = nounce
