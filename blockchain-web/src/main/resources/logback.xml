@@ -1,6 +1,15 @@
 <configuration>
 
-	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>application.log</file>
+
+		<encoder>
+			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="console"
+		class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>
 				%d{HH:mm:ss.SSS} %-5level - %msg%n
@@ -10,6 +19,7 @@
 
 	<root>
 		<level value="info" />
+		<appender-ref ref="FILE" />
 		<appender-ref ref="console" />
 	</root>
 </configuration>
