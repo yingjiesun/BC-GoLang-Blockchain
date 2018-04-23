@@ -59,11 +59,11 @@ func Runtcp() error {
 	go func(){		
 		
 		for {
-			t := time.Now()
+			//t := time.Now()
 			fmt.Println("Start creating new block")
 			
-			transaction_data := []Transaction {	Transaction{ TransactionId: lan_ip, Timestamp: t.String()}}
-			newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], transaction_data)
+			//transaction_data := []Transaction {	Transaction{ TransactionId: lan_ip, Timestamp: t.String()}}
+			newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], temp_trans)
 			
 			if err != nil {
 				//panic (err)
@@ -87,7 +87,29 @@ func Runtcp() error {
 		
 	}()
 	
-	//YS: END of remove code
+	//YS: END of generating test block
+	
+	/*
+	YS: Remove code below, this is for testing to generate transaction randomly in 10-20 seconds 
+	*/
+	go func(){		
+		
+		test_tran_id := 100
+		
+		for {
+			t := time.Now()			
+			
+			var tranaction_new = Transaction{ TransactionId: strconv.Itoa(test_tran_id), Timestamp: t.String()} 			
+			append_temp_trans(tranaction_new)
+			test_tran_id++
+			
+			time.Sleep(time.Duration(rand.Intn(10) + 20) * time.Second)	
+		}
+		
+	}()
+	
+	//YS: END of generating test transaction
+	
 	
 	go dialConn()	
 	
@@ -201,7 +223,7 @@ func handleConn(conn net.Conn) {
    
 	spew.Dump(receivedBlockchain)
 	
-	//YS: in blockchain.go, replace with new chain if it is longer
+	//YS: function in blockchain.go, replace with new chain if it is longer
 	replaceChain(receivedBlockchain)
 
     conn.Close()
