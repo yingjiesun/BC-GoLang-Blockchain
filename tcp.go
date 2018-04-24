@@ -56,35 +56,27 @@ func Runtcp() error {
 	/*
 	YS: Remove code below, this is for testing to generate block randomly in 30-90 seconds 
 	*/
-	go func(){		
-		
+	go func(){
 		for {
-			//t := time.Now()
 			fmt.Println("Start creating new block")
-			
-			//transaction_data := []Transaction {	Transaction{ TransactionId: lan_ip, Timestamp: t.String()}}
-			newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], temp_trans)
-			
-			if err != nil {
-				//panic (err)
-				fmt.Println("Error creating new block")
+			if len(temp_trans) > 0 {
+				newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], temp_trans)
+				temp_trans = temp_trans[:0]
+				if err != nil {
+					//panic (err)
+					fmt.Println("Error creating new block")
+				}
+				if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
+					newBlockchain := append(Blockchain, newBlock)
+					replaceChain(newBlockchain)
+					fmt.Println("====NEW BLOCK CREATED AND ADDED!====")
+					spew.Dump(Blockchain)
+				} else {
+					fmt.Println("INVALID block")
+				}
 			}
-		
-			if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
-			
-				newBlockchain := append(Blockchain, newBlock)
-								
-				replaceChain(newBlockchain)
-				
-				fmt.Println("====NEW BLOCK CREATED AND ADDED!====")
-				spew.Dump(Blockchain)
-			} else {
-				fmt.Println("INVALID block")
-			}
-			
-			time.Sleep(time.Duration(rand.Intn(60) + 30) * time.Second)	
+			time.Sleep(time.Duration(rand.Intn(30)) * time.Second)
 		}
-		
 	}()
 	
 	//YS: END of generating test block
@@ -103,7 +95,7 @@ func Runtcp() error {
 			append_temp_trans(tranaction_new)
 			test_tran_id++
 			
-			time.Sleep(time.Duration(rand.Intn(10) + 20) * time.Second)	
+			time.Sleep(time.Duration(rand.Intn(10)) * time.Second)	
 		}
 		
 	}()
