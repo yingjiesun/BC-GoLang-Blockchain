@@ -1,38 +1,54 @@
-YS 4/21/2018<BR>
-Added testing code to randomly create block in 30-90 seconds, with local IP as TransactionID<BR>
-Fixed a bug, transaction.go transactionIT should be TransactionID<BR>
-Updated main.go tcp.go transaction.go<BR>
-
-YS 4/19/2018<BR>
-Added BLOCKINTERVAL=5 to .env<BR>
-Added Timestamp in transactioin.go<BR>
-Updated tcp.go to generate timestamp for transaction<BR>
-
-YS 4/18/2018<BR>
-Added temp_trans to main.go, to hold temp transactions that are not saved in blockchain yet<BR>
-
-YS 4/16/2018<BR>
-Break project to multiple files<BR>
-Add transaction.go<BR>
-Modify block.go to have transactions array<BR>
-Modify TCP to accept new blocks in new format<BR>
-Add nounce to block<BR>
-Add DIFFICULTY in .env, 5 leading 0s now<BR>
-Add POW<BR>
-
-YS 4/14/2018<BR>
-Updates:<BR> 
-Separated files to main, block, http, transaction;<BR>
-Both Http TCP server starts when app is launched<BR>
-HTTP Server port: 8881<BR>
-TCP Server port: 9991<BR>
+# Welcome to our community blockchain
+## 1, project structure
+> **blockchain-core**: core blockchain code written by GoLang
 
 
+> **blockchain-web**: user GUI, written by spring boot plus bootstrap. used by end user who will interacted with
 
-To see blockchain in browser:<BR>
-http://localhost:8881<BR>
+## 2, development environment for blockchain-core
 
-To add block and simulate TCP network:<BR>
-in windows command terminal, go to nc(you may need download nc) folder, type<BR>
-nc localhost 9991<BR>
-and enter any sting(will be transaction ID for now)<BR>
+### Eclipse + GoClipse
+
+if you choose eclipse + goclipse to develop golang code, great! please keep reading.
+
+* download Eclipse Oxygen V3
+* open menu 'help' -> 'Eclipse Marketplace', search 'goclipse'
+* install goclipse plugin, restart Eclipse
+* checkout code by: git clone https://github.com/yingjiesun/BC-GoLang-Blockchain.git
+* from Eclipse choose 'import' -> 'Existing Projects into Workspace'
+* choose folder 'blockchain-core', click 'Open'
+* if everything goes well, congradulations! you did it.
+
+### Other IDE
+
+* welcome to add steps
+
+
+## 3, development environment for blockchain-web
+
+### Eclipse
+
+smart choice
+
+* download Eclipse Oxygen
+* checkout code by: git clone https://github.com/yingjiesun/BC-GoLang-Blockchain.git
+* from Eclipse choose 'import' -> 'Existing Maven Projects'
+* choose folder 'blockchain-web', click 'Open'
+
+### Other IDE
+
+* welcome to add steps
+
+## 4, how to run blockchain
+
+after server start, can visit **http://localhost:8881**
+
+## 5, how to run blockchain-web
+
+from folder 'blockchain-web' run command
+
+`mvn clean spring-boot:run`
+
+then can visit **http://localhost:8080**
+
+
