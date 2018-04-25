@@ -22,7 +22,7 @@ public class CommonWebSecurityConfiguration extends WebSecurityConfigurerAdapter
 			.authorizeRequests()
 				.antMatchers(WHITE_LIST)
 					.permitAll()
-					.anyRequest().authenticated();
+					.anyRequest().permitAll();
 	}
 	// @formatter:on
 }
