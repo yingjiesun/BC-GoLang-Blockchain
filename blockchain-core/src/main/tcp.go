@@ -54,7 +54,10 @@ func Runtcp() error {
 			fmt.Println("Start creating new block")
 			if len(temp_trans) > 0 {
 				newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], temp_trans)
-				temp_trans = temp_trans[:0]
+				mutex.Lock()
+			//	temp_trans = temp_trans[:0]
+				temp_trans = nil
+				mutex.Unlock()
 				if err != nil {
 					//panic (err)
 					fmt.Println("Error creating new block")
@@ -82,7 +85,9 @@ func Runtcp() error {
 		for {
 			t := time.Now()
 			var tranaction_new = Transaction{ TransactionId: strconv.Itoa(test_tran_id), Timestamp: t.String()}
+			mutex.Lock()
 			append_temp_trans(tranaction_new)
+			mutex.Unlock()
 			test_tran_id++
 			time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
 		}
