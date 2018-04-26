@@ -1,21 +1,21 @@
 package main
 
 import (
-		
+
 	"encoding/json"
 	"io"
 	"log"
 	"net/http"
-	"os"
+	//"os"
 	"time"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/gorilla/mux"	
+	"github.com/gorilla/mux"
 )
 
 func run() error {
 	mux := makeMuxRouter()
-	httpAddr := os.Getenv("ADDR")
-	log.Println("Listening on ", os.Getenv("ADDR"))
+	httpAddr := HTTP_PORT
+	log.Println("Listening on ", HTTP_PORT)
 	s := &http.Server{
 		Addr:           ":" + httpAddr,
 		Handler:        mux,
@@ -33,7 +33,6 @@ func run() error {
 
 func makeMuxRouter() http.Handler {
 	muxRouter := mux.NewRouter()
-	
 	muxRouter.HandleFunc("/", handleGetBlockchain).Methods("GET","OPTIONS")
 	muxRouter.HandleFunc("/", handleWriteBlock).Methods("POST")
 	return muxRouter
@@ -52,13 +51,10 @@ type Message struct {
 	transactions []Transaction
 }
 
-
 /*
-
-YS: 
+YS:
 TODO: modify this function to take jason obj and convert to []Transaction
 For now a new block generated at same time. In future new block is triggered by time.
-
 */
 
 func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
@@ -81,7 +77,6 @@ func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
 		replaceChain(newBlockchain)
 		spew.Dump(Blockchain)
 	}
-
 	respondWithJSON(w, r, http.StatusCreated, newBlock)
 }
 

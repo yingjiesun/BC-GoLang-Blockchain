@@ -1,18 +1,17 @@
 package main
 
 import (
-	
 	"crypto/sha256"
 	"encoding/hex"
 	"time"
 	"encoding/json"
-	"os"
+//	"os"
 	"strconv"
 	"fmt"
 	"sync"
 )
 
-//YS: nounce will get value in calculateHash()
+//YS: nounce get value in calculateHash()
 var nounce int
 var mutex = &sync.Mutex{}
 
@@ -29,61 +28,51 @@ func isBlockValid(newBlock, oldBlock Block) bool {
 	if calculateHash(newBlock) != newBlock.Hash {
 		return false
 	}
-
 	return true
 }
 
 // make sure the chain we're checking is longer than the current blockchain
 func replaceChain(newBlocks []Block) {
-	
-	fmt.Println("Current blockchain length: " + strconv.Itoa(len(Blockchain)))	
-	fmt.Println("New blockchain length: " + strconv.Itoa(len(newBlocks)))	
-		
+
+	fmt.Println("Current blockchain length: " + strconv.Itoa(len(Blockchain)))
+	fmt.Println("New blockchain length: " + strconv.Itoa(len(newBlocks)))
+
 	mutex.Lock()
 	if len(newBlocks) > len(Blockchain) {
 		Blockchain = newBlocks
 		fmt.Println("Blockchain replaced by longer one")
 	}
 	mutex.Unlock()
-	
 }
-
-/*
-
-YS: 
-Add Nounce to generate qualified hash, DIFFICULTY is from .env file
-(GoLang allows a function to return two values, Nounce and hash can be returned at same time)
-
-*/
 
 // SHA256 hasing
 func calculateHash(block Block) string {
 
 	returnValue := "NOT ME"
-	difficulty, err := strconv.Atoi(os.Getenv("DIFFICULTY"))
+	difficulty := DIFFICULTY
 	nounce = -1
-	
+
 	a := &block.Transactions
 	block_data, err := json.Marshal(a)
 	if err != nil {
         panic (err)
     }
-	
+
 	requiredLeadings := getRequiredString(difficulty)
 	currentLeading := "XXXXXXXXXXXXXXXXXXXXXXXXX"
 	for currentLeading != requiredLeadings {
 		nounce++
 		record := string(block.Index) + block.Timestamp + string(block_data) + block.PrevHash + string(nounce)
-		h := sha256.New()		
+		h := sha256.New()
 		h.Write([]byte(record))
 		hashed := h.Sum(nil)
 		returnValue = hex.EncodeToString(hashed)
-		currentLeading = string(returnValue[0:difficulty])		
+		currentLeading = string(returnValue[0:difficulty])
 	}
 	return returnValue
 }
 
-//YS: generate string of required leading 0s 
+//YS: generate string of required leading 0s
 func getRequiredString(n int) string {
     b := make([]rune, n)
     for i := range b {
@@ -101,12 +90,9 @@ func generateBlock(oldBlock Block, transactions []Transaction) (Block, error) {
 
 	newBlock.Index = oldBlock.Index + 1
 	newBlock.Timestamp = t.String()
-	
-	//YS: is this kind of assigment correct in golang?
 	newBlock.Transactions = transactions
-	
-	newBlock.PrevHash = oldBlock.Hash	
-	newBlock.Hash = calculateHash(newBlock)	
+	newBlock.PrevHash = oldBlock.Hash
+	newBlock.Hash = calculateHash(newBlock)
 	newBlock.Nounce = nounce
 
 	return newBlock, nil
