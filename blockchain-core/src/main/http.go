@@ -39,6 +39,10 @@ func makeMuxRouter() http.Handler {
 }
 
 func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
+	//YS: Enable CORS
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	bytes, err := json.MarshalIndent(Blockchain, "", "  ")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

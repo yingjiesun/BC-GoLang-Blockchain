@@ -53,8 +53,8 @@ func Runtcp() error {
 		for {
 			fmt.Println("Start creating new block")
 			if len(temp_trans) > 0 {
-				newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], temp_trans)
 				mutex.Lock()
+				newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], temp_trans)				
 			//	temp_trans = temp_trans[:0]
 				temp_trans = nil
 				mutex.Unlock()
