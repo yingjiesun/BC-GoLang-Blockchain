@@ -1,8 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
+	"os/signal"
 	"time"
+
 	"github.com/davecgh/go-spew/spew"
 	//"github.com/joho/godotenv"
 )
@@ -20,21 +24,33 @@ If IP from IP_POOL is not reachable, enter IP manually (need new function)
 var ip_pool_dynamic []string
 
 var t = time.Now()
-var genesisBlock_data = []Transaction {	Transaction{ TransactionId: "This is Genesis Blok!"	, Timestamp: t.String()}}
+var genesisBlock_data = []Transaction{Transaction{TransactionId: "This is Genesis Blok!", Timestamp: t.String()}}
 
 func main() {
-/*
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
+	/*
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal(err)
+		}
 	*/
+	var c = make(chan os.Signal)
+	signal.Notify(c, os.Interrupt)
+
+	go func() {
+		select {
+		case sig := <-c:
+			fmt.Printf("Got %s signal. Saving %d blocks to blockchain.dat \n", sig, len(Blockchain))
+			blockChainPersisten("blockchain.dat")
+			os.Exit(1)
+		}
+	}()
+
 	go func() {
 		t := time.Now()
 		genesisBlock := Block{0, t.String(), genesisBlock_data, "", "", 0}
 		spew.Dump(genesisBlock)
 		Blockchain = append(Blockchain, genesisBlock)
-		Runtcp();
+		Runtcp()
 	}()
 	log.Fatal(run())
 }
