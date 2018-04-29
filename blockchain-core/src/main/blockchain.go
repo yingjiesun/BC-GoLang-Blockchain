@@ -45,6 +45,8 @@ func replaceChain(newBlocks []Block) {
 	mutex.Unlock()
 }
 
+
+//YS 4/29 added node_ip
 // SHA256 hasing
 func calculateHash(block Block) string {
 
@@ -62,7 +64,7 @@ func calculateHash(block Block) string {
 	currentLeading := "XXXXXXXXXXXXXXXXXXXXXXXXX"
 	for currentLeading != requiredLeadings {
 		nounce++
-		record := string(block.Index) + block.Timestamp + string(block_data) + block.PrevHash + string(nounce)
+		record := string(block.Index) + block.Node_ip + block.Timestamp + string(block_data) + block.PrevHash + string(nounce)
 		h := sha256.New()
 		h.Write([]byte(record))
 		hashed := h.Sum(nil)
@@ -81,19 +83,22 @@ func getRequiredString(n int) string {
     return string(b)
 }
 
+//YS 4/29 added node_ip
 // create a new block using previous block's hash
-func generateBlock(oldBlock Block, transactions []Transaction) (Block, error) {
+func generateBlock(oldBlock Block, transactions []Transaction, node_ip string) (Block, error) {
 
 	var newBlock Block
 
 	t := time.Now()
 
 	newBlock.Index = oldBlock.Index + 1
+	newBlock.Node_ip = node_ip
 	newBlock.Timestamp = t.String()
 	newBlock.Transactions = transactions
 	newBlock.PrevHash = oldBlock.Hash
 	newBlock.Hash = calculateHash(newBlock)
 	newBlock.Nounce = nounce
+
 
 	return newBlock, nil
 }

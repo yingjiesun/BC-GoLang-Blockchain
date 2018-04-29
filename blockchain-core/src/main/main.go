@@ -9,6 +9,10 @@ import (
 
 var Blockchain []Block
 var temp_trans []Transaction
+var	ext_ip = GetOutboundIP()
+var	lan_ip = GetLAN_IP()
+var brd_type = BROADCAST_IP_TYPE
+var production_ip = ""
 
 /*
 YS: New array: ip_pool_dynamic, IPs of all nodes.
@@ -29,12 +33,18 @@ func main() {
 		log.Fatal(err)
 	}
 	*/
+	if (brd_type == "LAN"){
+		production_ip = lan_ip
+	} else {
+		production_ip = ext_ip
+	}
 	go func() {
 		t := time.Now()
-		genesisBlock := Block{0, t.String(), genesisBlock_data, "", "", 0}
+		genesisBlock := Block{0, production_ip, t.String(), genesisBlock_data, "", "", 0}
 		spew.Dump(genesisBlock)
 		Blockchain = append(Blockchain, genesisBlock)
-		Runtcp();
+		Runtcp()
+		//broadcast_IP(ext_ip)
 	}()
 	log.Fatal(run())
 }

@@ -13,7 +13,7 @@ import (
 
 func append_temp_trans(new_tx Transaction){
 	temp_trans = append(temp_trans, new_tx)
-	//TODO: call propagate
+	//todo: should check duplicate in case
 }
 
 //YS: delete transactions that are older than the timestamp of last block

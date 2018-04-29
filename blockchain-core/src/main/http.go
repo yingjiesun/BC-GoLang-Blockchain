@@ -71,7 +71,7 @@ func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], m.transactions)
+	newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], m.transactions, production_ip)
 	if err != nil {
 		respondWithJSON(w, r, http.StatusInternalServerError, m)
 		return
