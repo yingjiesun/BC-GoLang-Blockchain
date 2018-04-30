@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
+	"os/signal"
 	"time"
 	"github.com/davecgh/go-spew/spew"
 	//"github.com/joho/godotenv"
@@ -33,6 +36,19 @@ func main() {
 		log.Fatal(err)
 	}
 	*/
+
+	var c = make(chan os.Signal)
+	signal.Notify(c, os.Interrupt)
+
+	go func() {
+		select {
+		case sig := <-c:
+			fmt.Printf("Got %s signal. Saving %d blocks to blockchain.dat \n", sig, len(Blockchain))
+			blockChainPersisten("blockchain.dat")
+			os.Exit(1)
+		}
+	}()
+
 	if (brd_type == "LAN"){
 		production_ip = lan_ip
 	} else {

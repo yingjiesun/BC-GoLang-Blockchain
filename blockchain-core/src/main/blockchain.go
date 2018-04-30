@@ -3,11 +3,12 @@ package main
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"time"
 	"encoding/json"
-//	"os"
-	"strconv"
+	"os"
+	"time"
+	//	"os"
 	"fmt"
+	"strconv"
 	"sync"
 )
 
@@ -45,8 +46,6 @@ func replaceChain(newBlocks []Block) {
 	mutex.Unlock()
 }
 
-
-//YS 4/29 added node_ip
 // SHA256 hasing
 func calculateHash(block Block) string {
 
@@ -57,14 +56,14 @@ func calculateHash(block Block) string {
 	a := &block.Transactions
 	block_data, err := json.Marshal(a)
 	if err != nil {
-        panic (err)
-    }
+		panic(err)
+	}
 
 	requiredLeadings := getRequiredString(difficulty)
 	currentLeading := "XXXXXXXXXXXXXXXXXXXXXXXXX"
 	for currentLeading != requiredLeadings {
 		nounce++
-		record := string(block.Index) + block.Node_ip + block.Timestamp + string(block_data) + block.PrevHash + string(nounce)
+		record := string(block.Index) + block.Timestamp + string(block_data) + block.PrevHash + string(nounce)
 		h := sha256.New()
 		h.Write([]byte(record))
 		hashed := h.Sum(nil)
@@ -76,14 +75,13 @@ func calculateHash(block Block) string {
 
 //YS: generate string of required leading 0s
 func getRequiredString(n int) string {
-    b := make([]rune, n)
-    for i := range b {
-        b[i] = '0'
-    }
-    return string(b)
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = '0'
+	}
+	return string(b)
 }
 
-//YS 4/29 added node_ip
 // create a new block using previous block's hash
 func generateBlock(oldBlock Block, transactions []Transaction, node_ip string) (Block, error) {
 
@@ -101,4 +99,17 @@ func generateBlock(oldBlock Block, transactions []Transaction, node_ip string) (
 
 
 	return newBlock, nil
+}
+
+func blockChainPersisten(path string) {
+	file, err := os.Create(path)
+
+	if err == nil {
+		for i, block := range Blockchain {
+			block.persistent(file)
+			fmt.Print(i, block.Index)
+		}
+	} else {
+		fmt.Printf("open file failed while saving\n")
+	}
 }
