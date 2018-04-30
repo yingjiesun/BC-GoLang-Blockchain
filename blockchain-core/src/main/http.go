@@ -1,15 +1,15 @@
 package main
 
 import (
-
 	"encoding/json"
 	"io"
 	"log"
 	"net/http"
 	//"os"
-	"time"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
+	"net/url"
+	"time"
 )
 
 func run() error {
@@ -33,7 +33,7 @@ func run() error {
 
 func makeMuxRouter() http.Handler {
 	muxRouter := mux.NewRouter()
-	muxRouter.HandleFunc("/", handleGetBlockchain).Methods("GET","OPTIONS")
+	muxRouter.HandleFunc("/", handleGetBlockchain).Methods("GET", "OPTIONS")
 	muxRouter.HandleFunc("/", handleWriteBlock).Methods("POST")
 	return muxRouter
 }
@@ -43,12 +43,46 @@ func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	bytes, err := json.MarshalIndent(Blockchain, "", "  ")
+	var bytes []byte
+	var err error
+
+	r.ParseForm()
+	preBlockHash := retrieveParameterFromRequest(r.Form, "offsetByPreBlockHash")
+
+	if preBlockHash != "" {
+		searchedBlockIndex := searchSpecifiedBlockByHash(preBlockHash)
+		if searchedBlockIndex == -1 {
+			bytes = []byte{}
+		} else {
+			bytes, err = json.MarshalIndent(Blockchain[searchedBlockIndex+1:], "", "  ")
+		}
+	} else {
+		bytes, err = json.MarshalIndent(Blockchain, "", "  ")
+	}
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	io.WriteString(w, string(bytes))
+}
+
+func searchSpecifiedBlockByHash(hashCode string) int {
+	for index, block := range Blockchain {
+		if block.Hash == hashCode {
+			return index
+		}
+	}
+	return -1
+}
+
+func retrieveParameterFromRequest(values url.Values, key string) string {
+	v := values.Get(key)
+	if v == "" {
+		return ""
+	} else {
+		return v
+	}
 }
 
 type Message struct {
