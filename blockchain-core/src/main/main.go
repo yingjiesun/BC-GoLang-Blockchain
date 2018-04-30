@@ -18,13 +18,13 @@ var brd_type = BROADCAST_IP_TYPE
 var production_ip = ""
 
 /*
-YS: New array: ip_pool_dynamic, IPs of all nodes.
+YS: New array: peer_ip_pool, IPs of all nodes.
 Every 30 minutes, external IP shall be sent to all nodes. The received IP shall be added to this array.
-New joined node shall use ip_pool_dynamic first, if ip_pool_dynamic is empty, use the hard coded IP_POOL
+New joined node shall use peer_ip_pool first, if peer_ip_pool is empty, use the hard coded IP_POOL
 If IP from IP_POOL is not reachable, enter IP manually (need new function)
 */
 
-var ip_pool_dynamic []string
+var peer_ip_pool []string
 
 var t = time.Now()
 var genesisBlock_data = []Transaction {	Transaction{ TransactionId: "This is Genesis Blok!"	, Timestamp: t.String()}}
@@ -54,6 +54,14 @@ func main() {
 	} else {
 		production_ip = ext_ip
 	}
+
+	//YS: add its own ip to peer_ip_pool
+	peer_ip_pool = append_if_missing(peer_ip_pool, production_ip)
+
+	for v := range SEED_IP_POOL{
+			peer_ip_pool = append_if_missing(peer_ip_pool, SEED_IP_POOL[v])
+	}
+
 	go func() {
 		t := time.Now()
 		genesisBlock := Block{0, production_ip, t.String(), genesisBlock_data, "", "", 0}

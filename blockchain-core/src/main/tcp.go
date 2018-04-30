@@ -30,12 +30,7 @@ import (
 // bcServer handles incoming concurrent Blocks
 //var bcServer chan []Block
 
-
-
-
 func Runtcp() error {
-
-
 
 	server, err := net.Listen("tcp", ":" + TCP_PORT)
 	if err != nil {
@@ -72,9 +67,6 @@ func Runtcp() error {
 					fmt.Println("INVALID block")
 				}
 			}
-
-
-		//	broadcast_IP(ext_ip)
 			time.Sleep(time.Duration(rand.Intn(30)) * time.Second)
 		}
 	}()
@@ -100,8 +92,8 @@ func Runtcp() error {
 
 	//YS: END of generating test transaction
 
+	go broadcast_IP(production_ip)
 	go dialConn_bc()
-  go broadcast_IP(production_ip)
 
 	//YS: create a new connection each time a connection request is received, and serve it.
 	for {
@@ -152,11 +144,11 @@ Every 30 seconds, dial TCP and send blockchain
 func dialConn_bc() {
 
 	//YS: this should be updated to use dynamic ip pool first
-	ip_pool := strings.Split( IP_POOL , "_")
+	//ip_pool := strings.Split( IP_POOL , "_")
 	broadcast_invl := BROADCAST_INTERVAL
 
-	for v := range ip_pool{
-		fmt.Println("ip_pool : " + ip_pool[v])
+	for v := range peer_ip_pool{
+		fmt.Println("peer_ip_pool : " + peer_ip_pool[v])
 	}
 	for {
 		//YS: Prepare data
@@ -166,12 +158,12 @@ func dialConn_bc() {
 		}
 		json_data := Container{Type:"BC", Object:raw_chain}
 
-		for i := range ip_pool{
+		for i := range peer_ip_pool{
 			//YS: do not dial itself
-			if (ip_pool[i] == production_ip) {
+			if (peer_ip_pool[i] == production_ip) {
 				continue
 			}
-			conn, err := net.Dial("tcp", ip_pool[i] + ":" + TCP_PORT)
+			conn, err := net.Dial("tcp", peer_ip_pool[i] + ":" + TCP_PORT)
 			if err != nil {
 				fmt.Println("CONNECTION ERROR:", err.Error())
 				continue
@@ -187,26 +179,26 @@ func dialConn_bc() {
 }
 
 
-//YS: when node start, call this function once.
+/*
+YS: when node start, call this function once.
+This function will send IP to known seed nodes in IP_POOL,
+and when seed nodes receive this broadcast, the peer_ip_pool (peer nodes)
+will be broadcast to all nodes
+*/
 func broadcast_IP(the_ip string) {
 
-	//YS: this should be updated to use dynamic ip pool first
 	raw_ip, err := json.Marshal(the_ip)
 	if ( err != nil ){
 			fmt.Println("raw_ip Marshal error : " , err.Error())
 	}
 	json_data := Container{Type:"IP", Object:raw_ip}
 
-	ip_pool := strings.Split( IP_POOL , "_")
-	broadcast_invl := BROADCAST_INTERVAL
-	//YS: after testing, remove this for and time sleep
-	for {
-		for i := range ip_pool{
+		for i := range SEED_IP_POOL{
 			//YS: do not dial itself
-			if (ip_pool[i] == production_ip) {
+			if (SEED_IP_POOL[i] == production_ip) {
 				continue
 			}
-			conn, err := net.Dial("tcp", ip_pool[i] + ":" + TCP_PORT)
+			conn, err := net.Dial("tcp", SEED_IP_POOL[i] + ":" + TCP_PORT)
 			if err != nil {
 				fmt.Println("CONNECTION ERROR:", err.Error())
 				continue
@@ -216,8 +208,32 @@ func broadcast_IP(the_ip string) {
 			if err := encoder.Encode(json_data); err != nil {
 					 fmt.Println("broadcast_IP() encode.Encode error: ", err)
 			 }
-			 time.Sleep(time.Duration(broadcast_invl) * time.Second)
-		}
+	}
+}
+
+func broadcast_IPS() {
+
+	raw_ips, err := json.Marshal(peer_ip_pool)
+	if ( err != nil ){
+			fmt.Println("raw_ips Marshal error : " , err.Error())
+	}
+	json_data := Container{Type:"IPS", Object:raw_ips}
+
+	for i := range peer_ip_pool{
+			//YS: do not dial itself
+			if (peer_ip_pool[i] == production_ip) {
+				continue
+			}
+			conn, err := net.Dial("tcp", peer_ip_pool[i] + ":" + TCP_PORT)
+			if err != nil {
+				fmt.Println("CONNECTION ERROR:", err.Error())
+				continue
+			}
+
+			encoder := json.NewEncoder(conn)
+			if err := encoder.Encode(json_data); err != nil {
+				 fmt.Println("broadcast_IPS() encode.Encode error: ", err)
+		 }
 	}
 }
 
@@ -231,14 +247,14 @@ func propagate_TX(the_tx Transaction) {
 	}
 	json_data := Container{Type:"TX", Object:raw_tx}
 
-	ip_pool := strings.Split( IP_POOL , "_")
 
-	for i := range ip_pool{
+
+	for i := range peer_ip_pool{
 		//YS: do not dial itself
-		if (ip_pool[i] == production_ip) {
+		if (peer_ip_pool[i] == production_ip) {
 			continue
 		}
-		conn, err := net.Dial("tcp", ip_pool[i] + ":" + TCP_PORT)
+		conn, err := net.Dial("tcp", peer_ip_pool[i] + ":" + TCP_PORT)
 		if err != nil {
 			fmt.Println("CONNECTION ERROR:", err.Error())
 			continue
@@ -271,24 +287,23 @@ func handleConn(conn net.Conn) {
 		fmt.Println("==========================")
 		fmt.Println("My External IP: " + ext_ip );
 		fmt.Println("My Internal IP: " + lan_ip );
-		fmt.Println("Received blockchain: " + t.String())
+		fmt.Println("Received data from other nodes: " + t.String())
 		fmt.Println("c.Type: " + c.Type)
 
 		switch c.Type {
+		case "TX":
+				process_TX(c)
 		case "BC":
 			process_BC(c)
 		case "IP":
 			process_IP(c)
-		case "TX":
-			process_TX(c)
+		case "IPS":
+			process_IPS(c)
 		default:
 			fmt.Println("Can not process data received")
 		}
 	//	spew.Dump(received_blockchain)
-		//YS: function in blockchain.go, replace with new chain if it is longer
-		//replaceChain(received_blockchain)
 	}
-	//	fmt.Println("IP received 2: " + received_ip)
 }
 
 func process_BC(c Container){
@@ -300,13 +315,31 @@ func process_BC(c Container){
 //	fmt.Println("===========END Received Blockchain:")
 }
 
+/*
+YS: Only seed nodes in IP_POOL receive this IP
+IP will be added to peer_ip_pool and then peer_ip_pool will be broadcast to all nodes
+*/
 func process_IP(c Container){
 	var received_ip string
 	json.Unmarshal(c.Object, &received_ip)
-	ip_pool_dynamic = append_if_missing(ip_pool_dynamic, received_ip)
+	peer_ip_pool = append_if_missing(peer_ip_pool, received_ip)
 	fmt.Println("Received IP added to dynamic ip pool: " + received_ip)
-	for ele := range ip_pool_dynamic{
-		fmt.Println("dynamic ip pool: " + ip_pool_dynamic[ele])
+	for ele := range peer_ip_pool{
+		fmt.Println("dynamic ip pool: " + peer_ip_pool[ele])
+	}
+	//YS: Seed node receive new node IP and broadcast to all nodes
+	broadcast_IPS()
+}
+
+func process_IPS(c Container){
+	var received_ips []string
+	json.Unmarshal(c.Object, &received_ips)
+
+	peer_ip_pool = merge_array_unique(peer_ip_pool, received_ips)
+
+	fmt.Println("peer_ip_pool received and merged" )
+	for ele := range peer_ip_pool{
+		fmt.Println("dynamic ip pool: " + peer_ip_pool[ele])
 	}
 }
 
@@ -324,6 +357,13 @@ func append_if_missing(slice []string, str string) []string {
         }
     }
     return append(slice, str)
+}
+
+func merge_array_unique(slice1 []string, new_slice []string) []string {
+    for _, ele := range new_slice {
+        slice1 = append_if_missing(slice1, ele)
+    }
+    return slice1
 }
 
 /*
