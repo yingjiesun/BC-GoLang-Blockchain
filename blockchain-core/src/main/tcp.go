@@ -247,8 +247,6 @@ func propagate_TX(the_tx Transaction) {
 	}
 	json_data := Container{Type:"TX", Object:raw_tx}
 
-
-
 	for i := range peer_ip_pool{
 		//YS: do not dial itself
 		if (peer_ip_pool[i] == production_ip) {
@@ -266,7 +264,31 @@ func propagate_TX(the_tx Transaction) {
 	}
 }
 
+//YS: when new block generated, call this function.
+func propagate_BL(the_bl Block) {
 
+	raw_bl, err := json.Marshal(the_bl)
+	if ( err != nil ){
+			fmt.Println("raw_bl Marshal error : " , err.Error())
+	}
+	json_data := Container{Type:"BL", Object:raw_bl}
+
+	for i := range peer_ip_pool{
+		//YS: do not dial itself
+		if (peer_ip_pool[i] == production_ip) {
+			continue
+		}
+		conn, err := net.Dial("tcp", peer_ip_pool[i] + ":" + TCP_PORT)
+		if err != nil {
+			fmt.Println("CONNECTION ERROR:", err.Error())
+			continue
+		}
+		encoder := json.NewEncoder(conn)
+		if err := encoder.Encode(json_data); err != nil {
+				 fmt.Println("broadcast_BL() encode.Encode error: ", err)
+		}
+	}
+}
 
 /*
 YS: Accept TCP connection
@@ -348,6 +370,13 @@ func process_TX(c Container){
 	json.Unmarshal(c.Object, &received_tx)
 	temp_trans = append(temp_trans, received_tx)
 	fmt.Println("Received TX added to temp_trans: " + received_tx.TransactionId)
+}
+
+func process_BL(c Container){
+	var received_bl Block
+	json.Unmarshal(c.Object, &received_bl)
+	//TODO: validate block and append to blockchain
+	fmt.Println("Received block" )
 }
 
 func append_if_missing(slice []string, str string) []string {
