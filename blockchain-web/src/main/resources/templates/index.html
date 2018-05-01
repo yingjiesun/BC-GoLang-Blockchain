@@ -212,35 +212,40 @@
 				<div class="card-body">
 					<div class="table-responsive">
 						<table class="table table-bordered" id="dataTable" width="100%"
-							cellspacing="0" style="word-break:break-all; word-wrap:break-all;">
+							cellspacing="0"
+							style="word-break: break-all; word-wrap: break-all;">
 							<thead>
 								<tr>
-									<th width="20%">Hash</th>
 									<th>Index</th>
+									<th>Hash</th>
 									<th>Nounce</th>
-									<th width="20%">PrevHash</th>
 									<th>Timestamp</th>
 									<th>Action</th>
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
-									<th>Name</th>
-									<th>Position</th>
-									<th>Office</th>
-									<th>Age</th>
-									<th>Start date</th>
-									<th>Salary</th>
+									<th>Index</th>
+									<th>Hash</th>
+									<th>Nounce</th>
+									<th>Timestamp</th>
+									<th>Action</th>
 								</tr>
 							</tfoot>
 							<tbody>
 								<tr th:each="block, blockStat : ${blocks}">
-									<td th:text="${block.hash}"></td>
 									<td th:text="${block.index}"></td>
+									<td>
+										<span>Current Block Hash:</span><br/>
+										<p th:text="${block.hash}" class="badge badge-success"></p>
+										<p></p>
+										<span>Previous Block Hash:</span><br />
+										<p th:text="${block.prevHash}" class="badge badge-info"></p>
+									</td>
 									<td th:text="${block.nounce}"></td>
-									<td th:text="${block.prevHash}"></td>
 									<td th:text="${block.timestamp}"></td>
-									<td><button class="btn btn-primary">Transaction Detail</button></td>
+									<td><button class="btn btn-primary">Transaction
+											Detail</button></td>
 								</tr>
 							</tbody>
 						</table>

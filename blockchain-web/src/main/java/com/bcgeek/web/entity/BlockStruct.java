@@ -1,7 +1,9 @@
 package com.bcgeek.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BlockStruct {
 
 	@JsonProperty("Hash")
@@ -47,6 +49,11 @@ public class BlockStruct {
 		this.prevHash = prevHash;
 	}
 	public String getTimestamp() {
+		if (timestamp != null) {
+			if (timestamp.length() >= 21) {
+				timestamp = timestamp.substring(0, 20);
+			}
+		}
 		return timestamp;
 	}
 	public void setTimestamp(String timestamp) {
