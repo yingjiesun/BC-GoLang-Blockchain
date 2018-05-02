@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"time"
 	"github.com/davecgh/go-spew/spew"
+//	"strconv"
 	//"github.com/joho/godotenv"
 )
 
@@ -24,12 +25,24 @@ New joined node shall use peer_ip_pool first, if peer_ip_pool is empty, use the 
 If IP from IP_POOL is not reachable, enter IP manually (need new function)
 */
 
+
+
+
+
+
 var peer_ip_pool []string
 
 var t = time.Now()
 var genesisBlock_data = []Transaction {	Transaction{ TransactionId: "This is Genesis Blok!"	, Timestamp: t.String()}}
 
 func main() {
+
+
+	var t1 = time.Now().Unix()
+//	var t1_str = strconv.Itoa(t)
+	fmt.Println("Unix: " , t1)
+
+
 /*
 	err := godotenv.Load()
 	if err != nil {

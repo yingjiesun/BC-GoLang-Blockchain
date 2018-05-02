@@ -12,6 +12,17 @@ import (
 	"sync"
 )
 
+/*
+YS: Two dimensional array of blockchain, received blocks will be saved in potential_chains
+When a block is received, first check if it can be connected to existing chain (parent or child),
+if not, create new chain and put this orphan into it
+calculate the maximum difference between chains, if the largest difference is greater than 6
+dicard the shortest one, and save the oldese N blocks from the longest chaing
+N is the length of the discarded chain
+*/
+
+var potential_chains [][]Block
+
 //YS: nounce get value in calculateHash()
 var nounce int
 var mutex = &sync.Mutex{}
@@ -112,4 +123,40 @@ func blockChainPersisten(path string) {
 	} else {
 		fmt.Printf("open file failed while saving\n")
 	}
+}
+
+func add_block_to_potential_chains(bl Block){
+	fmt.Println("=============START CONSENSUS===============" )
+
+	connected := false;
+	for i := range potential_chains{
+		for j := range potential_chains[i] {
+			if (potential_chains[i][j].Hash == bl.PrevHash ||
+					potential_chains[i][j].PrevHash == bl.Hash){
+						potential_chains[i] = append(potential_chains[i], bl)
+						connected = true
+						fmt.Println("Block is connected to a potential chain: ", i , ", Block from: ", bl.Node_ip )
+						break
+					}
+		}
+		fmt.Println("potential_chain ", i, " length: ", len(potential_chains[i]) )
+	}
+
+	if (!connected){
+		new_chain := []Block{bl}
+		potential_chains = append(potential_chains, new_chain)
+		fmt.Println("Block is orphan, created new chain and appened to potential_chains, Block from: ", bl.Node_ip )
+	}
+	update_potential_chains()
+}
+
+func update_potential_chains(){
+	fmt.Println("In function update_potential_chains()" )
+	max_length := 10 //TODO: length of longest chain in update_potential_chains
+	min_length :=0 //TODO: length of shortest chain in update_potential_chains
+	if (max_length - min_length > MAXFORKLENGTH) {
+		//TODO: save oldest min_length blocks of longest chain to hard drive, discard shortest chain
+	}
+
+		fmt.Println("=============END CONSENSUS===============" )
 }

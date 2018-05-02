@@ -63,6 +63,10 @@ func Runtcp() error {
 					replaceChain(newBlockchain)
 					fmt.Println("====NEW BLOCK CREATED AND ADDED!====")
 					//spew.Dump(Blockchain)
+
+					add_block_to_potential_chains(newBlock)
+					propagate_BL(newBlock)
+
 				} else {
 					fmt.Println("INVALID block")
 				}
@@ -321,6 +325,8 @@ func handleConn(conn net.Conn) {
 			process_IP(c)
 		case "IPS":
 			process_IPS(c)
+		case "BL":
+			process_BL(c)
 		default:
 			fmt.Println("Can not process data received")
 		}
@@ -375,7 +381,10 @@ func process_TX(c Container){
 func process_BL(c Container){
 	var received_bl Block
 	json.Unmarshal(c.Object, &received_bl)
-	//TODO: validate block and append to blockchain
+	if (calculateHash(received_bl) == received_bl.Hash){
+		add_block_to_potential_chains(received_bl)
+	}
+
 	fmt.Println("Received block" )
 }
 

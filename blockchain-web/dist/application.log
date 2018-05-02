@@ -52,3 +52,171 @@ Using generated security password: a93d0f90-5550-4063-b3b6-28cb81abf54a
 2018-04-28 21:03:38,333 INFO [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet [FrameworkServlet.java:494] FrameworkServlet 'dispatcherServlet': initialization started
 2018-04-28 21:03:38,387 INFO [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet [FrameworkServlet.java:513] FrameworkServlet 'dispatcherServlet': initialization completed in 51 ms
 2018-04-29 11:44:50,605 WARN [HikariPool-1 housekeeper] c.z.h.p.HikariPool [HikariPool.java:756] HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11h7m44s640ms391?s646ns).
+2018-04-30 10:36:38,453 INFO [main] c.b.w.App [StartupInfoLogger.java:50] Starting App v1.0.0-SNAPSHOT on owner-PC with PID 6456 (C:\Go_Workspace\BC-GoLang-Blockchain\blockchain-web\dist\blockchain-web-1.0.0-SNAPSHOT.jar started by Work in C:\Go_Workspace\BC-GoLang-Blockchain\blockchain-web\dist)
+2018-04-30 10:36:38,501 INFO [main] c.b.w.App [SpringApplication.java:652] No active profile set, falling back to default profiles: default
+2018-04-30 10:36:38,692 INFO [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [AbstractApplicationContext.java:589] Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@763d9750: startup date [Mon Apr 30 10:36:38 CDT 2018]; root of context hierarchy
+2018-04-30 10:36:41,486 INFO [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [PostProcessorRegistrationDelegate.java:328] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$c74c8b74] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-04-30 10:36:42,396 INFO [main] o.s.b.w.e.t.TomcatWebServer [TomcatWebServer.java:91] Tomcat initialized with port(s): 8080 (http)
+2018-04-30 10:36:42,443 INFO [main] o.a.c.h.Http11NioProtocol [DirectJDKLog.java:180] Initializing ProtocolHandler ["http-nio-8080"]
+2018-04-30 10:36:42,472 INFO [main] o.a.c.c.StandardService [DirectJDKLog.java:180] Starting service [Tomcat]
+2018-04-30 10:36:42,473 INFO [main] o.a.c.c.StandardEngine [DirectJDKLog.java:180] Starting Servlet Engine: Apache Tomcat/8.5.28
+2018-04-30 10:36:42,499 INFO [localhost-startStop-1] o.a.c.c.AprLifecycleListener [DirectJDKLog.java:180] The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_131\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x86;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x64;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\Java\jdk1.8.0_91\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Go\bin;C:\Program Files\Git\cmd;C:\Program Files\apache-maven-3.5.3\bin;C:\Users\Work\AppData\Local\Microsoft\WindowsApps;C:\Users\Work\AppData\Local\atom\bin;.]
+2018-04-30 10:36:43,274 INFO [localhost-startStop-1] o.a.c.c.C.[.[.[/] [DirectJDKLog.java:180] Initializing Spring embedded WebApplicationContext
+2018-04-30 10:36:43,275 INFO [localhost-startStop-1] o.s.w.c.ContextLoader [ServletWebServerApplicationContext.java:285] Root WebApplicationContext: initialization completed in 4595 ms
+2018-04-30 10:36:43,597 INFO [localhost-startStop-1] o.s.b.w.s.FilterRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'characterEncodingFilter' to: [/*]
+2018-04-30 10:36:43,597 INFO [localhost-startStop-1] o.s.b.w.s.FilterRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2018-04-30 10:36:43,597 INFO [localhost-startStop-1] o.s.b.w.s.FilterRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2018-04-30 10:36:43,612 INFO [localhost-startStop-1] o.s.b.w.s.FilterRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'requestContextFilter' to: [/*]
+2018-04-30 10:36:43,612 INFO [localhost-startStop-1] o.s.b.w.s.DelegatingFilterProxyRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'springSecurityFilterChain' to: [/*]
+2018-04-30 10:36:43,612 INFO [localhost-startStop-1] o.s.b.w.s.ServletRegistrationBean [ServletRegistrationBean.java:185] Servlet dispatcherServlet mapped to [/]
+2018-04-30 10:36:44,179 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:110] HikariPool-1 - Starting...
+2018-04-30 10:36:44,483 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:123] HikariPool-1 - Start completed.
+2018-04-30 10:36:44,593 INFO [main] o.s.o.j.LocalContainerEntityManagerFactoryBean [LocalContainerEntityManagerFactoryBean.java:361] Building JPA container EntityManagerFactory for persistence unit 'default'
+2018-04-30 10:36:44,640 INFO [main] o.h.j.i.u.LogHelper [LogHelper.java:31] HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2018-04-30 10:36:44,811 INFO [main] o.h.Version [Version.java:45] HHH000412: Hibernate Core {5.2.14.Final}
+2018-04-30 10:36:44,827 INFO [main] o.h.c.Environment [Environment.java:213] HHH000206: hibernate.properties not found
+2018-04-30 10:36:44,915 INFO [main] o.h.a.c.Version [JavaReflectionManager.java:66] HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+2018-04-30 10:36:45,526 INFO [main] o.h.d.Dialect [Dialect.java:157] HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2018-04-30 10:36:46,033 INFO [main] o.h.t.s.i.SchemaCreatorImpl [SchemaCreatorImpl.java:489] HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@58695725'
+2018-04-30 10:36:46,033 INFO [main] o.s.o.j.LocalContainerEntityManagerFactoryBean [AbstractEntityManagerFactoryBean.java:394] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2018-04-30 10:36:47,009 INFO [main] o.s.w.s.m.m.a.RequestMappingHandlerAdapter [RequestMappingHandlerAdapter.java:567] Looking for @ControllerAdvice: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@763d9750: startup date [Mon Apr 30 10:36:38 CDT 2018]; root of context hierarchy
+2018-04-30 10:36:47,087 WARN [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [JpaBaseConfiguration.java:235] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2018-04-30 10:36:47,212 INFO [main] o.s.w.s.m.m.a.RequestMappingHandlerMapping [AbstractHandlerMethodMapping.java:548] Mapped "{[/]}" onto public java.lang.String com.bcgeek.web.controller.HomeController.home(org.springframework.ui.Model)
+2018-04-30 10:36:47,212 INFO [main] o.s.w.s.m.m.a.RequestMappingHandlerMapping [AbstractHandlerMethodMapping.java:548] Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2018-04-30 10:36:47,212 INFO [main] o.s.w.s.m.m.a.RequestMappingHandlerMapping [AbstractHandlerMethodMapping.java:548] Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2018-04-30 10:36:47,320 INFO [main] o.s.w.s.h.SimpleUrlHandlerMapping [AbstractUrlHandlerMapping.java:373] Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-04-30 10:36:47,320 INFO [main] o.s.w.s.h.SimpleUrlHandlerMapping [AbstractUrlHandlerMapping.java:373] Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-04-30 10:36:47,414 INFO [main] o.s.w.s.h.SimpleUrlHandlerMapping [AbstractUrlHandlerMapping.java:373] Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-04-30 10:36:47,730 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java:61] Adding welcome page template: index
+2018-04-30 10:36:48,162 INFO [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration [UserDetailsServiceAutoConfiguration.java:82] 
+
+Using generated security password: 286885fe-f4d5-4540-a237-a163cca283b7
+
+2018-04-30 10:36:48,412 INFO [main] o.s.s.w.DefaultSecurityFilterChain [DefaultSecurityFilterChain.java:43] Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@c667f46, org.springframework.security.web.context.SecurityContextPersistenceFilter@21d03963, org.springframework.security.web.header.HeaderWriterFilter@4bff7da0, org.springframework.security.web.csrf.CsrfFilter@7d61eb55, org.springframework.security.web.authentication.logout.LogoutFilter@3576ddc2, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@18ece7f4, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@33f676f6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@51bd8b5c, org.springframework.security.web.session.SessionManagementFilter@536dbea0, org.springframework.security.web.access.ExceptionTranslationFilter@3e62d773, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7905a0b8]
+2018-04-30 10:36:48,562 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [MBeanExporter.java:434] Registering beans for JMX exposure on startup
+2018-04-30 10:36:48,562 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [MBeanExporter.java:896] Bean with name 'dataSource' has been autodetected for JMX exposure
+2018-04-30 10:36:48,578 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [MBeanExporter.java:669] Located MBean 'dataSource': registering with JMX server as MBean [com.zaxxer.hikari:name=dataSource,type=HikariDataSource]
+2018-04-30 10:36:48,593 INFO [main] o.a.c.h.Http11NioProtocol [DirectJDKLog.java:180] Starting ProtocolHandler ["http-nio-8080"]
+2018-04-30 10:36:48,687 INFO [main] o.a.t.u.n.NioSelectorPool [DirectJDKLog.java:180] Using a shared selector for servlet write/read
+2018-04-30 10:36:48,703 INFO [main] o.s.b.w.e.t.TomcatWebServer [TomcatWebServer.java:205] Tomcat started on port(s): 8080 (http) with context path ''
+2018-04-30 10:36:48,718 INFO [main] c.b.w.App [StartupInfoLogger.java:59] Started App in 11.631 seconds (JVM running for 13.99)
+2018-04-30 10:37:12,686 INFO [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/] [DirectJDKLog.java:180] Initializing Spring FrameworkServlet 'dispatcherServlet'
+2018-04-30 10:37:12,686 INFO [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet [FrameworkServlet.java:494] FrameworkServlet 'dispatcherServlet': initialization started
+2018-04-30 10:37:12,718 INFO [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet [FrameworkServlet.java:513] FrameworkServlet 'dispatcherServlet': initialization completed in 32 ms
+2018-04-30 19:38:35,349 WARN [HikariPool-1 housekeeper] c.z.h.p.HikariPool [HikariPool.java:756] HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=28m43s635ms273?s7ns).
+2018-04-30 22:39:05,138 INFO [main] c.b.w.App [StartupInfoLogger.java:50] Starting App v1.0.0-SNAPSHOT on owner-PC with PID 6460 (C:\Go_Workspace\BC-GoLang-Blockchain\blockchain-web\dist\blockchain-web-1.0.0-SNAPSHOT.jar started by Work in C:\Go_Workspace\BC-GoLang-Blockchain\blockchain-web\dist)
+2018-04-30 22:39:05,138 INFO [main] c.b.w.App [SpringApplication.java:652] No active profile set, falling back to default profiles: default
+2018-04-30 22:39:05,263 INFO [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [AbstractApplicationContext.java:589] Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@2be94b0f: startup date [Mon Apr 30 22:39:05 CDT 2018]; root of context hierarchy
+2018-04-30 22:39:07,563 INFO [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [PostProcessorRegistrationDelegate.java:328] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$116183ba] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-04-30 22:39:08,297 INFO [main] o.s.b.w.e.t.TomcatWebServer [TomcatWebServer.java:91] Tomcat initialized with port(s): 8080 (http)
+2018-04-30 22:39:08,328 INFO [main] o.a.c.h.Http11NioProtocol [DirectJDKLog.java:180] Initializing ProtocolHandler ["http-nio-8080"]
+2018-04-30 22:39:08,344 INFO [main] o.a.c.c.StandardService [DirectJDKLog.java:180] Starting service [Tomcat]
+2018-04-30 22:39:08,344 INFO [main] o.a.c.c.StandardEngine [DirectJDKLog.java:180] Starting Servlet Engine: Apache Tomcat/8.5.28
+2018-04-30 22:39:08,360 INFO [localhost-startStop-1] o.a.c.c.AprLifecycleListener [DirectJDKLog.java:180] The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_131\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x86;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x64;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\Java\jdk1.8.0_91\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Go\bin;C:\Program Files\Git\cmd;C:\Program Files\apache-maven-3.5.3\bin;C:\Users\Work\AppData\Local\Microsoft\WindowsApps;C:\Users\Work\AppData\Local\atom\bin;.]
+2018-04-30 22:39:09,048 INFO [localhost-startStop-1] o.a.c.c.C.[.[.[/] [DirectJDKLog.java:180] Initializing Spring embedded WebApplicationContext
+2018-04-30 22:39:09,048 INFO [localhost-startStop-1] o.s.w.c.ContextLoader [ServletWebServerApplicationContext.java:285] Root WebApplicationContext: initialization completed in 3785 ms
+2018-04-30 22:39:09,360 INFO [localhost-startStop-1] o.s.b.w.s.FilterRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'characterEncodingFilter' to: [/*]
+2018-04-30 22:39:09,360 INFO [localhost-startStop-1] o.s.b.w.s.FilterRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2018-04-30 22:39:09,360 INFO [localhost-startStop-1] o.s.b.w.s.FilterRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2018-04-30 22:39:09,360 INFO [localhost-startStop-1] o.s.b.w.s.FilterRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'requestContextFilter' to: [/*]
+2018-04-30 22:39:09,360 INFO [localhost-startStop-1] o.s.b.w.s.DelegatingFilterProxyRegistrationBean [AbstractFilterRegistrationBean.java:243] Mapping filter: 'springSecurityFilterChain' to: [/*]
+2018-04-30 22:39:09,360 INFO [localhost-startStop-1] o.s.b.w.s.ServletRegistrationBean [ServletRegistrationBean.java:185] Servlet dispatcherServlet mapped to [/]
+2018-04-30 22:39:09,832 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:110] HikariPool-1 - Starting...
+2018-04-30 22:39:10,128 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:123] HikariPool-1 - Start completed.
+2018-04-30 22:39:10,268 INFO [main] o.s.o.j.LocalContainerEntityManagerFactoryBean [LocalContainerEntityManagerFactoryBean.java:361] Building JPA container EntityManagerFactory for persistence unit 'default'
+2018-04-30 22:39:10,300 INFO [main] o.h.j.i.u.LogHelper [LogHelper.java:31] HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2018-04-30 22:39:10,495 INFO [main] o.h.Version [Version.java:45] HHH000412: Hibernate Core {5.2.14.Final}
+2018-04-30 22:39:10,495 INFO [main] o.h.c.Environment [Environment.java:213] HHH000206: hibernate.properties not found
+2018-04-30 22:39:10,558 INFO [main] o.h.a.c.Version [JavaReflectionManager.java:66] HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+2018-04-30 22:39:11,298 INFO [main] o.h.d.Dialect [Dialect.java:157] HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2018-04-30 22:39:11,971 INFO [main] o.h.t.s.i.SchemaCreatorImpl [SchemaCreatorImpl.java:489] HHH000476: Executing import script 'org.hibernate.tool.schema.internal.exec.ScriptSourceInputNonExistentImpl@f5acb9d'
+2018-04-30 22:39:11,987 INFO [main] o.s.o.j.LocalContainerEntityManagerFactoryBean [AbstractEntityManagerFactoryBean.java:394] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2018-04-30 22:39:13,336 INFO [main] o.s.w.s.m.m.a.RequestMappingHandlerAdapter [RequestMappingHandlerAdapter.java:567] Looking for @ControllerAdvice: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@2be94b0f: startup date [Mon Apr 30 22:39:05 CDT 2018]; root of context hierarchy
+2018-04-30 22:39:13,477 WARN [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration [JpaBaseConfiguration.java:235] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2018-04-30 22:39:13,676 INFO [main] o.s.w.s.m.m.a.RequestMappingHandlerMapping [AbstractHandlerMethodMapping.java:548] Mapped "{[/]}" onto public java.lang.String com.bcgeek.web.controller.HomeController.home(org.springframework.ui.Model)
+2018-04-30 22:39:13,697 INFO [main] o.s.w.s.m.m.a.RequestMappingHandlerMapping [AbstractHandlerMethodMapping.java:548] Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2018-04-30 22:39:13,712 INFO [main] o.s.w.s.m.m.a.RequestMappingHandlerMapping [AbstractHandlerMethodMapping.java:548] Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2018-04-30 22:39:13,837 INFO [main] o.s.w.s.h.SimpleUrlHandlerMapping [AbstractUrlHandlerMapping.java:373] Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-04-30 22:39:13,837 INFO [main] o.s.w.s.h.SimpleUrlHandlerMapping [AbstractUrlHandlerMapping.java:373] Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-04-30 22:39:13,962 INFO [main] o.s.w.s.h.SimpleUrlHandlerMapping [AbstractUrlHandlerMapping.java:373] Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-04-30 22:39:14,493 INFO [main] o.s.b.a.w.s.WelcomePageHandlerMapping [WelcomePageHandlerMapping.java:61] Adding welcome page template: index
+2018-04-30 22:39:15,003 INFO [main] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration [UserDetailsServiceAutoConfiguration.java:82] 
+
+Using generated security password: a7e92786-8a43-41bc-868e-c9fb3eadb19d
+
+2018-04-30 22:39:15,275 INFO [main] o.s.s.w.DefaultSecurityFilterChain [DefaultSecurityFilterChain.java:43] Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7b50df34, org.springframework.security.web.context.SecurityContextPersistenceFilter@18ece7f4, org.springframework.security.web.header.HeaderWriterFilter@536dbea0, org.springframework.security.web.csrf.CsrfFilter@6c7a164b, org.springframework.security.web.authentication.logout.LogoutFilter@2e570ded, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1cf56a1c, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@264f218, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1b410b60, org.springframework.security.web.session.SessionManagementFilter@776a6d9b, org.springframework.security.web.access.ExceptionTranslationFilter@7283d3eb, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@389b0789]
+2018-04-30 22:39:15,479 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [MBeanExporter.java:434] Registering beans for JMX exposure on startup
+2018-04-30 22:39:15,479 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [MBeanExporter.java:896] Bean with name 'dataSource' has been autodetected for JMX exposure
+2018-04-30 22:39:15,479 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [MBeanExporter.java:669] Located MBean 'dataSource': registering with JMX server as MBean [com.zaxxer.hikari:name=dataSource,type=HikariDataSource]
+2018-04-30 22:39:15,511 INFO [main] o.a.c.h.Http11NioProtocol [DirectJDKLog.java:180] Starting ProtocolHandler ["http-nio-8080"]
+2018-04-30 22:39:15,526 ERROR [main] o.a.c.c.StandardService [DirectJDKLog.java:182] Failed to start connector [Connector[HTTP/1.1-8080]]
+org.apache.catalina.LifecycleException: Failed to start component [Connector[HTTP/1.1-8080]]
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:167)
+	at org.apache.catalina.core.StandardService.addConnector(StandardService.java:225)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.addPreviouslyRemovedConnectors(TomcatWebServer.java:255)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.start(TomcatWebServer.java:197)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.startWebServer(ServletWebServerApplicationContext.java:300)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.finishRefresh(ServletWebServerApplicationContext.java:162)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:552)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:140)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:388)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:327)
+	at com.bcgeek.web.App.main(App.java:16)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:48)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:87)
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:50)
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:51)
+Caused by: org.apache.catalina.LifecycleException: Protocol handler start failed
+	at org.apache.catalina.connector.Connector.startInternal(Connector.java:1021)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	... 19 common frames omitted
+Caused by: java.net.BindException: Address already in use: bind
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Unknown Source)
+	at sun.nio.ch.Net.bind(Unknown Source)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(Unknown Source)
+	at sun.nio.ch.ServerSocketAdaptor.bind(Unknown Source)
+	at org.apache.tomcat.util.net.NioEndpoint.bind(NioEndpoint.java:210)
+	at org.apache.tomcat.util.net.AbstractEndpoint.start(AbstractEndpoint.java:1150)
+	at org.apache.coyote.AbstractProtocol.start(AbstractProtocol.java:591)
+	at org.apache.catalina.connector.Connector.startInternal(Connector.java:1018)
+	... 20 common frames omitted
+2018-04-30 22:39:15,526 INFO [main] o.a.c.h.Http11NioProtocol [DirectJDKLog.java:180] Pausing ProtocolHandler ["http-nio-8080"]
+2018-04-30 22:39:15,526 INFO [main] o.a.c.c.StandardService [DirectJDKLog.java:180] Stopping service [Tomcat]
+2018-04-30 22:39:15,620 INFO [main] o.a.c.u.LifecycleBase [DirectJDKLog.java:180] The stop() method was called on component [StandardServer[-1]] after stop() had already been called. The second call will be ignored.
+2018-04-30 22:39:15,620 INFO [main] o.a.c.h.Http11NioProtocol [DirectJDKLog.java:180] Stopping ProtocolHandler ["http-nio-8080"]
+2018-04-30 22:39:15,620 INFO [main] o.a.c.h.Http11NioProtocol [DirectJDKLog.java:180] Destroying ProtocolHandler ["http-nio-8080"]
+2018-04-30 22:39:15,636 INFO [main] o.s.b.a.l.ConditionEvaluationReportLoggingListener [ConditionEvaluationReportLoggingListener.java:101] 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2018-04-30 22:39:15,636 ERROR [main] o.s.b.d.LoggingFailureAnalysisReporter [LoggingFailureAnalysisReporter.java:42] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The Tomcat connector configured to listen on port 8080 failed to start. The port may already be in use or the connector may be misconfigured.
+
+Action:
+
+Verify the connector's configuration, identify and stop any process that's listening on port 8080, or configure this application to listen on another port.
+
+2018-04-30 22:39:15,636 INFO [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [AbstractApplicationContext.java:989] Closing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@2be94b0f: startup date [Mon Apr 30 22:39:05 CDT 2018]; root of context hierarchy
+2018-04-30 22:39:15,636 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [MBeanExporter.java:452] Unregistering JMX-exposed beans on shutdown
+2018-04-30 22:39:15,636 INFO [main] o.s.j.e.a.AnnotationMBeanExporter [MBeanRegistrationSupport.java:183] Unregistering JMX-exposed beans
+2018-04-30 22:39:15,636 INFO [main] o.s.o.j.LocalContainerEntityManagerFactoryBean [AbstractEntityManagerFactoryBean.java:572] Closing JPA EntityManagerFactory for persistence unit 'default'
+2018-04-30 22:39:15,636 INFO [main] o.h.t.s.i.SchemaDropperImpl$DelayedDropActionImpl [SchemaDropperImpl.java:524] HHH000477: Starting delayed drop of schema as part of SessionFactory shut-down'
+2018-04-30 22:39:15,651 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:381] HikariPool-1 - Shutdown initiated...
+2018-04-30 22:39:15,651 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:383] HikariPool-1 - Shutdown completed.
+2018-05-01 18:31:25,943 WARN [HikariPool-1 housekeeper] c.z.h.p.HikariPool [HikariPool.java:756] HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=19h27m31s551ms93?s153ns).
