@@ -43,6 +43,19 @@ func isBlockValid(newBlock, oldBlock Block) bool {
 	return true
 }
 
+// check the whole chain and make sure it is self-consistent
+func isChainValid(aChain []Block) bool {
+	for i:= range aChain {
+		if (i == 0) {
+			continue
+		}
+		if !(isBlockValid(aChain[i], aChain[i - 1])) {
+			return false
+		}
+	}
+	return true
+}
+
 // make sure the chain we're checking is longer than the current blockchain
 func replaceChain(newBlocks []Block) {
 
