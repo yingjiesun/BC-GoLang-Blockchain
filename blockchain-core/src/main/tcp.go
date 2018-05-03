@@ -81,7 +81,7 @@ func Runtcp() error {
 	YS: Testing code below, this is to generate transaction randomly in 10-20 seconds
 	*/
 	go func(){
-		test_tran_id := 100
+		test_tran_id := 1
 		for {
 			t := time.Now()
 			var tranaction_new = Transaction{ TransactionId: strconv.Itoa(test_tran_id) + ", created by " + production_ip, Timestamp: t.String()}
