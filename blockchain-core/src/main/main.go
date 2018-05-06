@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"time"
-	"github.com/davecgh/go-spew/spew"
+//	"github.com/davecgh/go-spew/spew"
 //	"strconv"
 	//"github.com/joho/godotenv"
 )
@@ -24,24 +24,11 @@ Every 30 minutes, external IP shall be sent to all nodes. The received IP shall 
 New joined node shall use peer_ip_pool first, if peer_ip_pool is empty, use the hard coded IP_POOL
 If IP from IP_POOL is not reachable, enter IP manually (need new function)
 */
-
-
-
-
-
-
 var peer_ip_pool []string
-
-var t = time.Now()
+var t = time.Now().UTC()
 var genesisBlock_data = []Transaction {	Transaction{ TransactionId: "This is Genesis Blok!"	, Timestamp: t.String()}}
-
+var genesisBlock Block
 func main() {
-
-
-	var t1 = time.Now().Unix()
-//	var t1_str = strconv.Itoa(t)
-	fmt.Println("Unix: " , t1)
-
 
 /*
 	err := godotenv.Load()
@@ -71,15 +58,30 @@ func main() {
 	//YS: add its own ip to peer_ip_pool
 	peer_ip_pool = append_if_missing(peer_ip_pool, production_ip)
 
+// add seed to perr IP pool
 	for v := range SEED_IP_POOL{
 			peer_ip_pool = append_if_missing(peer_ip_pool, SEED_IP_POOL[v])
 	}
 
 	go func() {
-		t := time.Now()
-		genesisBlock := Block{0, production_ip, t.String(), genesisBlock_data, "", "", 0}
-		spew.Dump(genesisBlock)
-		Blockchain = append(Blockchain, genesisBlock)
+
+		fmt.Println("==========================")
+		fmt.Println("My External IP: " + ext_ip );
+		fmt.Println("My Internal IP: " + lan_ip );
+		fmt.Println("My Production IP: " + production_ip );
+		for v := range peer_ip_pool{
+			fmt.Println("peer_ip_pool : " + peer_ip_pool[v])
+		}
+
+
+		t := time.Now().UTC()
+		genesisBlock = Block{0, production_ip, t.String(), genesisBlock_data, "", "", 0}
+		genesisBlock.Hash = calculateHash(genesisBlock)
+		genesisBlock.Nounce = nounce
+	//	spew.Dump(genesisBlock)
+		add_block_to_potential_chains(genesisBlock)
+
+		//Blockchain = append(Blockchain, genesisBlock)
 		Runtcp()
 		//broadcast_IP(ext_ip)
 	}()

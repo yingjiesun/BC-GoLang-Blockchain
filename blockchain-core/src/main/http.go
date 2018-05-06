@@ -34,6 +34,7 @@ func run() error {
 func makeMuxRouter() http.Handler {
 	muxRouter := mux.NewRouter()
 	muxRouter.HandleFunc("/", handleGetBlockchain).Methods("GET", "OPTIONS")
+	muxRouter.HandleFunc("/longest", handleGetLongestBlockchain).Methods("GET", "OPTIONS")
 	muxRouter.HandleFunc("/", handleWriteBlock).Methods("POST")
 	return muxRouter
 }
@@ -45,6 +46,37 @@ func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
 
 	var bytes []byte
 	var err error
+
+	r.ParseForm()
+	preBlockHash := retrieveParameterFromRequest(r.Form, "offsetByPreBlockHash")
+
+	if preBlockHash != "" {
+		searchedBlockIndex := searchSpecifiedBlockByHash(preBlockHash)
+		if searchedBlockIndex == -1 {
+			bytes = []byte{}
+		} else {
+			bytes, err = json.MarshalIndent(Blockchain[searchedBlockIndex+1:], "", "  ")
+		}
+	} else {
+		bytes, err = json.MarshalIndent(Blockchain, "", "  ")
+	}
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	io.WriteString(w, string(bytes))
+}
+
+func handleGetLongestBlockchain(w http.ResponseWriter, r *http.Request) {
+	//YS: Enable CORS
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	var bytes []byte
+	var err error
+	var longest_chain = getLongestChain()
+	replaceChain(longest_chain)
 
 	r.ParseForm()
 	preBlockHash := retrieveParameterFromRequest(r.Form, "offsetByPreBlockHash")

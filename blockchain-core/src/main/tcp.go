@@ -37,41 +37,45 @@ func Runtcp() error {
 		log.Fatal(err)
 	}
 	defer server.Close()
-
-	//YS: Print Node External and Internal IP
-	fmt.Println("My External IP: " + ext_ip );
-	fmt.Println("My Internal IP: " + lan_ip );
+	add_block_to_potential_chains(genesisBlock)
+	propagate_BL(genesisBlock)
 
 	/*
 	YS: Testing code below, this is to generate block randomly in 30-90 seconds
 	*/
 	go func(){
 		for {
-			fmt.Println("Start creating new block")
-			if len(temp_trans) > 0 {
-				mutex.Lock()
-				newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], temp_trans, production_ip )
-			//	temp_trans = temp_trans[:0]
-				temp_trans = nil
-				mutex.Unlock()
-				if err != nil {
-					//panic (err)
-					fmt.Println("Error creating new block")
-				}
-				if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
-					newBlockchain := append(Blockchain, newBlock)
-					replaceChain(newBlockchain)
-					fmt.Println("====NEW BLOCK CREATED AND ADDED!====")
-					//spew.Dump(Blockchain)
 
-					add_block_to_potential_chains(newBlock)
-					propagate_BL(newBlock)
+			if len(temp_trans) > 0 {
+			//	longest_chain := getLongestChain()
+				newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], temp_trans, production_ip )
+				if err != nil {
+				//	panic (err)
+
+					//TODO: update temp_tans
 
 				} else {
-					fmt.Println("INVALID block")
+
+
+					if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
+						//	temp_trans = temp_trans[:0]
+								mutex.Lock()
+								// TODO: update temp_trans
+								temp_trans = nil
+								mutex.Unlock()
+					//	replaceChain(newBlockchain)
+						fmt.Println("=== NEW BLOCK CREATED")
+						//spew.Dump(Blockchain)
+
+						add_block_to_potential_chains(newBlock)
+						propagate_BL(newBlock)
+
+					} else {
+						fmt.Println("INVALID block")
+					}
 				}
 			}
-			time.Sleep(time.Duration(rand.Intn(30)) * time.Second)
+			time.Sleep(time.Duration(rand.Intn(20)) * time.Second)
 		}
 	}()
 
@@ -83,7 +87,7 @@ func Runtcp() error {
 	go func(){
 		test_tran_id := 1
 		for {
-			t := time.Now()
+			t := time.Now().UTC()
 			var tranaction_new = Transaction{ TransactionId: strconv.Itoa(test_tran_id) + ", created by " + production_ip, Timestamp: t.String()}
 			mutex.Lock()
 			append_temp_trans(tranaction_new)
@@ -97,7 +101,12 @@ func Runtcp() error {
 	//YS: END of generating test transaction
 
 	go broadcast_IP(production_ip)
-	go dialConn_bc()
+
+	/*
+	YS: Stop sending whole blockchain, new node should request a whole blockchain download
+	when new node send IP to seed, seed should call this func with the received IP
+	*/
+	//go dialConn_bc()
 
 	//YS: create a new connection each time a connection request is received, and serve it.
 	for {
@@ -135,53 +144,54 @@ func GetLAN_IP() string {
 		}
 	localAddr := conn.LocalAddr().String()
 	idx := strings.LastIndex(localAddr, ":")
-	fmt.Println("outer IP: " + localAddr[0:idx] );
+//	fmt.Println("outer IP: " + localAddr[0:idx] );
     return localAddr[0:idx]
 }
 
 /*
-YS 4/20:
-Create TCP connection to other nodes listed in IP_POOL
-Every 30 seconds, dial TCP and send blockchain
+
+YS: new node should request a whole blockchain download
+when new node send IP to seed, seed should call this func with the received IP
+
 */
 
-func dialConn_bc() {
-
-	//YS: this should be updated to use dynamic ip pool first
-	//ip_pool := strings.Split( IP_POOL , "_")
-	broadcast_invl := BROADCAST_INTERVAL
-
-	for v := range peer_ip_pool{
-		fmt.Println("peer_ip_pool : " + peer_ip_pool[v])
+func dialConn_bc(new_node_ip string) {
+	//YS: Prepare data
+	raw_chain, err := json.Marshal(Blockchain)
+	if ( err != nil ){
+			fmt.Println("raw_chain Marshal error : " , err.Error())
 	}
-	for {
-		//YS: Prepare data
-		raw_chain, err := json.Marshal(Blockchain)
-		if ( err != nil ){
-				fmt.Println("raw_chain Marshal error : " , err.Error())
-		}
-		json_data := Container{Type:"BC", Object:raw_chain}
+	json_data := Container{Type:"BC", Object:raw_chain}
 
-		for i := range peer_ip_pool{
-			//YS: do not dial itself
-			if (peer_ip_pool[i] == production_ip) {
-				continue
-			}
-			conn, err := net.Dial("tcp", peer_ip_pool[i] + ":" + TCP_PORT)
-			if err != nil {
-				fmt.Println("CONNECTION ERROR:", err.Error())
-				continue
-			}
-			encoder := json.NewEncoder(conn)
-
-			if err := encoder.Encode(json_data); err != nil {
-					 fmt.Println("dialConn_bc() encode.Encode error: ", err)
-			 }
-		}
-		time.Sleep(time.Duration(broadcast_invl) * time.Second)
+	conn, err := net.Dial("tcp", new_node_ip + ":" + TCP_PORT)
+	if err != nil {
+		fmt.Println("CONNECTION ERROR:", err.Error())
 	}
+	encoder := json.NewEncoder(conn)
+
+	if err := encoder.Encode(json_data); err != nil {
+			 fmt.Println("dialConn_bc() encode.Encode error: ", err)
+	 }
 }
 
+func dialConn_pc(new_node_ip string) {
+	//YS: Prepare data
+	raw_chains, err := json.Marshal(potential_chains)
+	if ( err != nil ){
+			fmt.Println("raw_chains Marshal error : " , err.Error())
+	}
+	json_data := Container{Type:"PC", Object:raw_chains}
+
+	conn, err := net.Dial("tcp", new_node_ip + ":" + TCP_PORT)
+	if err != nil {
+		fmt.Println("CONNECTION ERROR:", err.Error())
+	}
+	encoder := json.NewEncoder(conn)
+
+	if err := encoder.Encode(json_data); err != nil {
+			 fmt.Println("dialConn_bc() encode.Encode error: ", err)
+	 }
+}
 
 /*
 YS: when node start, call this function once.
@@ -309,24 +319,28 @@ func handleConn(conn net.Conn) {
 	if err := decoder.Decode(&c); ( err != nil && err != io.EOF ){
 		fmt.Println("decoder.Decode(&c) err: ", err)
 	} else {
-		t := time.Now()
-		fmt.Println("==========================")
-		fmt.Println("My External IP: " + ext_ip );
-		fmt.Println("My Internal IP: " + lan_ip );
-		fmt.Println("Received data from other nodes: " + t.String())
-		fmt.Println("c.Type: " + c.Type)
+	//	t := time.Now().UTC()
+	//	fmt.Println("==========================")
+	//	fmt.Println("My External IP: " + ext_ip );
+	//	fmt.Println("My Internal IP: " + lan_ip );
+
+
 
 		switch c.Type {
 		case "TX":
 				process_TX(c)
+		case "BL":
+			fmt.Println("=== RECEIVED BLOCK from other nodes")
+			process_BL(c)
 		case "BC":
 			process_BC(c)
+		case "PC":
+			process_PC(c)
 		case "IP":
 			process_IP(c)
 		case "IPS":
 			process_IPS(c)
-		case "BL":
-			process_BL(c)
+
 		default:
 			fmt.Println("Can not process data received")
 		}
@@ -343,6 +357,15 @@ func process_BC(c Container){
 //	fmt.Println("===========END Received Blockchain:")
 }
 
+func process_PC(c Container){
+	var received_potential_chains [][]Block
+	json.Unmarshal(c.Object, &received_potential_chains)
+	potential_chains = received_potential_chains
+	fmt.Println("Received potential_chains")
+
+}
+
+
 /*
 YS: Only seed nodes in IP_POOL receive this IP
 IP will be added to peer_ip_pool and then peer_ip_pool will be broadcast to all nodes
@@ -355,8 +378,16 @@ func process_IP(c Container){
 	for ele := range peer_ip_pool{
 		fmt.Println("dynamic ip pool: " + peer_ip_pool[ele])
 	}
-	//YS: Seed node receive new node IP and broadcast to all nodes
-	broadcast_IPS()
+	if (contains_str(SEED_IP_POOL, production_ip) || len(SEED_IP_POOL) == 0 ){
+		//YS: Seed node receive new IP and send whole blockchain
+		dialConn_bc(received_ip)
+		fmt.Println("Seed sending blockchain to new node: " + received_ip)
+		dialConn_pc(received_ip)
+		fmt.Println("Seed sending potential_chains to new node: " + received_ip)
+		//YS: Seed node receive new node IP and broadcast to all nodes
+		broadcast_IPS()
+		fmt.Println("Seed sending IP POOL to new node: " + received_ip)
+	}
 }
 
 func process_IPS(c Container){
@@ -375,17 +406,20 @@ func process_TX(c Container){
 	var received_tx Transaction
 	json.Unmarshal(c.Object, &received_tx)
 	temp_trans = append(temp_trans, received_tx)
-	fmt.Println("Received TX added to temp_trans: " + received_tx.TransactionId)
+//	fmt.Println("Received TX added to temp_trans: " + received_tx.TransactionId)
 }
 
 func process_BL(c Container){
+	//fmt.Println("Received block" )
+	longest_chain := getLongestChain()
 	var received_bl Block
 	json.Unmarshal(c.Object, &received_bl)
-	if (calculateHash(received_bl) == received_bl.Hash){
+	if (calculateHash(received_bl) == received_bl.Hash ){
+		if (longest_chain[len(longest_chain)-1].Hash == received_bl.PrevHash ){
+			quit_hash_calc <- true
+		}
 		add_block_to_potential_chains(received_bl)
 	}
-
-	fmt.Println("Received block" )
 }
 
 func append_if_missing(slice []string, str string) []string {
@@ -402,6 +436,20 @@ func merge_array_unique(slice1 []string, new_slice []string) []string {
         slice1 = append_if_missing(slice1, ele)
     }
     return slice1
+}
+
+func contains_str(s []string, e string) bool {
+    for i := range s {
+        if s[i] == e {
+            return true
+        }
+    }
+    return false
+}
+
+type Container struct {
+    Type   string
+    Object json.RawMessage
 }
 
 /*
@@ -428,12 +476,6 @@ IP : Data_type = "IP"
 transaction: Data_type = "TX"
 Blockchain : Data_type = "BC"
 */
-
-type Container struct {
-    Type   string
-    Object json.RawMessage
-}
-
 
 
 /*

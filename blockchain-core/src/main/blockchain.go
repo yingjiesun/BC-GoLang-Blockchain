@@ -8,8 +8,9 @@ import (
 	"time"
 	//	"os"
 	"fmt"
-	"strconv"
+//	"strconv"
 	"sync"
+	"errors"
 )
 
 /*
@@ -22,10 +23,9 @@ N is the length of the discarded chain
 */
 
 var potential_chains [][]Block
-
-//YS: nounce get value in calculateHash()
-var nounce int
+var nounce int // in calculateHash() reset to -1 and calculate
 var mutex = &sync.Mutex{}
+var quit_hash_calc = make(chan bool) // quit_hash_calc <- true to terminate hash calculation
 
 // make sure block is valid by checking index, and comparing the hash of the previous block
 func isBlockValid(newBlock, oldBlock Block) bool {
@@ -59,8 +59,8 @@ func isChainValid(aChain []Block) bool {
 // make sure the chain we're checking is longer than the current blockchain
 func replaceChain(newBlocks []Block) {
 
-	fmt.Println("Current blockchain length: " + strconv.Itoa(len(Blockchain)))
-	fmt.Println("New blockchain length: " + strconv.Itoa(len(newBlocks)))
+//	fmt.Println("Current blockchain length: " + strconv.Itoa(len(Blockchain)))
+//	fmt.Println("New blockchain length: " + strconv.Itoa(len(newBlocks)))
 
 	mutex.Lock()
 	if len(newBlocks) > len(Blockchain) {
@@ -86,13 +86,19 @@ func calculateHash(block Block) string {
 	requiredLeadings := getRequiredString(difficulty)
 	currentLeading := "XXXXXXXXXXXXXXXXXXXXXXXXX"
 	for currentLeading != requiredLeadings {
-		nounce++
-		record := string(block.Index) + block.Timestamp + string(block_data) + block.PrevHash + string(nounce)
-		h := sha256.New()
-		h.Write([]byte(record))
-		hashed := h.Sum(nil)
-		returnValue = hex.EncodeToString(hashed)
-		currentLeading = string(returnValue[0:difficulty])
+		select{
+		case <- quit_hash_calc:
+			fmt.Println("--- quit_hash_calc ---")
+			return "Terminated"
+		default:
+			nounce++
+			record := string(block.Index) + block.Timestamp + string(block_data) + block.PrevHash + string(nounce)
+			h := sha256.New()
+			h.Write([]byte(record))
+			hashed := h.Sum(nil)
+			returnValue = hex.EncodeToString(hashed)
+			currentLeading = string(returnValue[0:difficulty])
+		}
 	}
 	return returnValue
 }
@@ -111,7 +117,7 @@ func generateBlock(oldBlock Block, transactions []Transaction, node_ip string) (
 
 	var newBlock Block
 
-	t := time.Now()
+	t := time.Now().UTC()
 
 	newBlock.Index = oldBlock.Index + 1
 	newBlock.Node_ip = node_ip
@@ -120,9 +126,13 @@ func generateBlock(oldBlock Block, transactions []Transaction, node_ip string) (
 	newBlock.PrevHash = oldBlock.Hash
 	newBlock.Hash = calculateHash(newBlock)
 	newBlock.Nounce = nounce
-
-
-	return newBlock, nil
+	if ( newBlock.Hash == "Terminated"){
+		fmt.Println("--- generateBlock Terminated ---")
+		error := errors.New("Terminated")
+		return newBlock, error
+	} else{
+		return newBlock, nil
+	}
 }
 
 func blockChainPersisten(path string) {
@@ -138,38 +148,121 @@ func blockChainPersisten(path string) {
 	}
 }
 
-func add_block_to_potential_chains(bl Block){
-	fmt.Println("=============START CONSENSUS===============" )
+func get_highest_block_index() int {
+	longest_chain := getLongestChain()
+	return longest_chain[len(longest_chain) - 1].Index
+}
+func append_child_chain_to_i(i int) bool {
+	for k := range potential_chains{
+		if (potential_chains[i][len(potential_chains[i])-1].Hash == potential_chains[k][len(potential_chains[k])-1].PrevHash ){
+			potential_chains[i] = append(potential_chains[i], potential_chains[k]...)
+			potential_chains[k] = nil
+			return true
+		}
+	}
+	return false
+}
+func discard_short_chains(){
+	highest_index := get_highest_block_index()
+	deleted := 0
+	for k := range potential_chains{
+		n := k - deleted
+		if ((highest_index - potential_chains[n][len(potential_chains[n])-1].Index) > MAXFORKLENGTH ){
+			fmt.Println("Discard chain: ", n)
+			potential_chains = append(potential_chains[:n], potential_chains[n+1:]...)
 
-	connected := false;
-	for i := range potential_chains{
-		for j := range potential_chains[i] {
-			if (potential_chains[i][j].Hash == bl.PrevHash ||
-					potential_chains[i][j].PrevHash == bl.Hash){
+			deleted++
+		}
+	}
+}
+func trim_chains(){
+	//TODO: trim chains and slice confirmed part, save to hard drive
+	Blockchain = getLongestChain()
+//	if (len(getLongestChain()) > MAXFORKLENGTH){
+//	}
+}
+/*
+YS: Consensus
+1, if hight of new block is 6 blocks lower than highest, discard; else
+2, Find parent for received block
+	- if parent is last block of a chain, connect to it
+	- if parent is a middle block of a chain, create new chain and copy parent and grandparents, and connected
+	- check oldest blcok of chains and see if the new block is parent, if yes, combine two chains
+	- if both parent and child found, jump to step 5; else
+3, Find child
+	- Child is only searched from oldest block of chains
+	- if found, preappend new bock to it
+	- if not found, go to next step
+4, Create orphan chain
+5, Check height of all chains, discard chains that are 6 blocks lower than highest
+6, Save blocks older than 6 from longest
+*/
+
+func add_block_to_potential_chains(bl Block){
+	//fmt.Println("=============START CONSENSUS===============" )
+	connected := false
+	if (len(potential_chains) == 0){
+		fmt.Println("Add as first chain" )
+		potential_chains = [][]Block{{bl}}
+		connected = true
+		fmt.Println("potential_chains Length: ", len(potential_chains) )
+	} else if ( (get_highest_block_index() - bl.Index) <= MAXFORKLENGTH ) {
+		for i := range potential_chains{
+			if (connected) {
+				break
+			}
+			for j := range potential_chains[i] {
+				if (connected) {
+					break
+				}
+				if (potential_chains[i][j].Hash == bl.PrevHash){ //parent found
+					if (j == (len(potential_chains[i])-1)){ //parent is last block
+						fmt.Println("Add block as child: ", i)
 						potential_chains[i] = append(potential_chains[i], bl)
 						connected = true
-						fmt.Println("Block is connected to a potential chain: ", i , ", Block from: ", bl.Node_ip )
+						break
+					} else { //parent is in middle of chain
+						fmt.Println("Add new chain, block as child" )
+						potential_chains = append(potential_chains, append(potential_chains[i][0:j],bl))
+						connected = true
+						if (append_child_chain_to_i(i)) {
+							discard_short_chains()
+							break
+						}
 						break
 					}
+				} else { // no parent found, finding child
+					for k := range potential_chains{
+						if (connected) {
+							break
+						}
+						if (potential_chains[k][0].PrevHash == bl.Hash){ //child found
+							potential_chains[k] = append([]Block{bl},potential_chains[k]...)
+							connected = true
+							break
+						}
+					}
+				}
+			}
+			fmt.Println("potential_chain ", i, " length: ", len(potential_chains[i]) )
 		}
-		fmt.Println("potential_chain ", i, " length: ", len(potential_chains[i]) )
-	}
 
-	if (!connected){
-		new_chain := []Block{bl}
-		potential_chains = append(potential_chains, new_chain)
-		fmt.Println("Block is orphan, created new chain and appened to potential_chains, Block from: ", bl.Node_ip )
+		if (!connected){
+			fmt.Println("Add as orphan" )
+			potential_chains = append(potential_chains, []Block{bl})
+		}
 	}
-	update_potential_chains()
+	trim_chains()
 }
 
-func update_potential_chains(){
-	fmt.Println("In function update_potential_chains()" )
-	max_length := 10 //TODO: length of longest chain in update_potential_chains
-	min_length :=0 //TODO: length of shortest chain in update_potential_chains
-	if (max_length - min_length > MAXFORKLENGTH) {
-		//TODO: save oldest min_length blocks of longest chain to hard drive, discard shortest chain
-	}
 
-		fmt.Println("=============END CONSENSUS===============" )
+func getLongestChain() []Block{
+		longest_index := 0
+		for i := range potential_chains{
+			if (len(potential_chains[i]) > len(potential_chains[longest_index])){
+				longest_index = i
+			}
+		}
+		fmt.Println("Longest chain is: " , longest_index )
+		return potential_chains[longest_index]
 }
