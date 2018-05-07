@@ -162,12 +162,50 @@ func append_child_chain_to_i(i int) bool {
 	}
 	return false
 }
+
+//YS: recursive call until no change happen
+func combine_chains() {
+	deleted :=0
+	if (len(potential_chains) > 1){
+		for i := range potential_chains{
+			m := i - deleted
+			if (len(potential_chains) > 1){
+				for j := range potential_chains{
+					//fmt.Println("potential_chains length: " , len(potential_chains)," m and j: ", m, j)
+					if (potential_chains[m][len(potential_chains[m])-1].Hash == potential_chains[j][0].PrevHash ){
+							// chain j is child of chain m, connect j to m and remove j
+							fmt.Println("---- Combined chains:")
+							fmt.Println("potential_chains length: " , len(potential_chains)," m and j: ", m, j)
+							potential_chains[m] = append(potential_chains[m], potential_chains[j]...)
+							potential_chains = append(potential_chains[:j],potential_chains[j+1:]...)
+							deleted++
+							//combine_chains()
+					}
+
+					if (potential_chains[m][0].PrevHash == potential_chains[j][len(potential_chains[j])-1].Hash ){
+							// chain m is child of chain j, connect m to j and remove m
+							fmt.Println("---- Combined chains:")
+							fmt.Println("potential_chains length: " , len(potential_chains)," m and j: ", m, j)
+							potential_chains[j] = append(potential_chains[j], potential_chains[m]...)
+							potential_chains = append(potential_chains[:m],potential_chains[m+1:]...)
+							deleted++
+						//	combine_chains()
+					}
+				}
+			}
+		}
+	}
+}
+
 func discard_short_chains(){
 	highest_index := get_highest_block_index()
+	//fmt.Println("IN discard_short_chains")
+//	longest := len(getLongestChain())
 	deleted := 0
 	for k := range potential_chains{
 		n := k - deleted
 		if ((highest_index - potential_chains[n][len(potential_chains[n])-1].Index) > MAXFORKLENGTH ){
+		//if (longest - len(potential_chains[n]) > 6){
 			fmt.Println("Discard chain: ", n)
 			potential_chains = append(potential_chains[:n], potential_chains[n+1:]...)
 
@@ -183,29 +221,25 @@ func trim_chains(){
 }
 /*
 YS: Consensus
-1, if hight of new block is 6 blocks lower than highest, discard; else
-2, Find parent for received block
-	- if parent is last block of a chain, connect to it
-	- if parent is a middle block of a chain, create new chain and copy parent and grandparents, and connected
-	- check oldest blcok of chains and see if the new block is parent, if yes, combine two chains
-	- if both parent and child found, jump to step 5; else
-3, Find child
-	- Child is only searched from oldest block of chains
-	- if found, preappend new bock to it
-	- if not found, go to next step
-4, Create orphan chain
-5, Check height of all chains, discard chains that are 6 blocks lower than highest
-6, Save blocks older than 6 from longest
+When a new block received, it could be
+a. A child of a chain's youngest block - attach
+b. A child of a chain's middle block - create new chain with the section of older blocks
+c. A parent of a chain's oldest block - attach
+d. A parent of a chain's middle block? - NOT POSSIBLE, means too blocks have same hash
+e. none of above - block is orphan, or the very first block, create new chain with this orphan block
+f. combination of a, b, c - After the above actions, try to connect chains and discard old ones
+g. trim chains, discard short chains
+h. handle confirmed section of blockchain, save to hard drive
 */
 
 func add_block_to_potential_chains(bl Block){
 	//fmt.Println("=============START CONSENSUS===============" )
 	connected := false
 	if (len(potential_chains) == 0){
-		fmt.Println("Add as first chain" )
+		fmt.Println("This is the very first block" )
 		potential_chains = [][]Block{{bl}}
 		connected = true
-		fmt.Println("potential_chains Length: ", len(potential_chains) )
+	//	fmt.Println("potential_chains Length: ", len(potential_chains) )
 	} else if ( (get_highest_block_index() - bl.Index) <= MAXFORKLENGTH ) {
 		for i := range potential_chains{
 			if (connected) {
@@ -217,42 +251,43 @@ func add_block_to_potential_chains(bl Block){
 				}
 				if (potential_chains[i][j].Hash == bl.PrevHash){ //parent found
 					if (j == (len(potential_chains[i])-1)){ //parent is last block
-						fmt.Println("Add block as child: ", i)
+						fmt.Println("Added block as child: ", i, " block #", bl.Index)
 						potential_chains[i] = append(potential_chains[i], bl)
 						connected = true
 						break
 					} else { //parent is in middle of chain
-						fmt.Println("Add new chain, block as child" )
-						potential_chains = append(potential_chains, append(potential_chains[i][0:j],bl))
+						fmt.Println("---- Parent is in middle of chain, created new chain, block added as child: #", bl.Index )
+						new_chain := potential_chains[i][:j+1]
+						new_chain = append(new_chain,bl)
+						potential_chains = append(potential_chains, new_chain)
 						connected = true
-						if (append_child_chain_to_i(i)) {
-							discard_short_chains()
-							break
-						}
 						break
-					}
-				} else { // no parent found, finding child
-					for k := range potential_chains{
-						if (connected) {
-							break
-						}
-						if (potential_chains[k][0].PrevHash == bl.Hash){ //child found
-							potential_chains[k] = append([]Block{bl},potential_chains[k]...)
-							connected = true
-							break
-						}
 					}
 				}
 			}
-			fmt.Println("potential_chain ", i, " length: ", len(potential_chains[i]) )
+		}
+
+		if (!connected) { // no parent found, finding child
+			for k := range potential_chains{
+				if (potential_chains[k][0].PrevHash == bl.Hash){ //child found
+					potential_chains[k] = append([]Block{bl},potential_chains[k]...)
+					fmt.Println("Added block as parent, #", bl.Index)
+					connected = true
+					break
+				}
+			}
 		}
 
 		if (!connected){
-			fmt.Println("Add as orphan" )
+			fmt.Println("Add block as orphan, #", bl.Index )
 			potential_chains = append(potential_chains, []Block{bl})
 		}
 	}
-	trim_chains()
+	combine_chains()
+	discard_short_chains()
+	for k := range potential_chains{
+			fmt.Println("potential_chains #", k,", length: ", len(potential_chains[k]) )
+	}
 }
 
 

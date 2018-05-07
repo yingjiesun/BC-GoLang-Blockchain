@@ -3,11 +3,18 @@
   <head>
     <meta charset="utf-8">
     <title>BC Blockchain</title>
+<style>
+  .col{
+    width:25%;
+  }
+</style>
+
   </head>
   <body>
 
-    <div id="show-data">
+  <div id="show-data">
 	<h2 style="margin-left:10px;">BC Blockchain</h2>
+
 	</div>
     <!--script src="http://code.jquery.com/jquery-1.9.1.min.js"></script-->
     <script>
@@ -79,6 +86,7 @@
 			block.appendChild(pre_hash);
 			block.appendChild(nounce);
 			block.appendChild(getTransactionsElement(val.Transactions));
+
 			document.getElementById("show-data").appendChild(block);
 		  }
 		}

@@ -47,17 +47,13 @@ func Runtcp() error {
 		for {
 
 			if len(temp_trans) > 0 {
-			//	longest_chain := getLongestChain()
-				newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], temp_trans, production_ip )
+				longest_chain := getLongestChain()
+				newBlock, err := generateBlock(longest_chain[len(longest_chain)-1], temp_trans, production_ip )
 				if err != nil {
 				//	panic (err)
-
 					//TODO: update temp_tans
-
 				} else {
-
-
-					if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
+					if isBlockValid(newBlock, longest_chain[len(longest_chain)-1]) {
 						//	temp_trans = temp_trans[:0]
 								mutex.Lock()
 								// TODO: update temp_trans
@@ -75,7 +71,7 @@ func Runtcp() error {
 					}
 				}
 			}
-			time.Sleep(time.Duration(rand.Intn(20)) * time.Second)
+			time.Sleep(time.Duration(rand.Intn(15)) * time.Second)
 		}
 	}()
 
@@ -330,7 +326,7 @@ func handleConn(conn net.Conn) {
 		case "TX":
 				process_TX(c)
 		case "BL":
-			fmt.Println("=== RECEIVED BLOCK from other nodes")
+		//	fmt.Println("=== RECEIVED BLOCK from other nodes")
 			process_BL(c)
 		case "BC":
 			process_BC(c)
@@ -410,10 +406,11 @@ func process_TX(c Container){
 }
 
 func process_BL(c Container){
-	//fmt.Println("Received block" )
+
 	longest_chain := getLongestChain()
 	var received_bl Block
 	json.Unmarshal(c.Object, &received_bl)
+	fmt.Println("Received block: #", received_bl.Index)
 	if (calculateHash(received_bl) == received_bl.Hash ){
 		if (longest_chain[len(longest_chain)-1].Hash == received_bl.PrevHash ){
 			quit_hash_calc <- true

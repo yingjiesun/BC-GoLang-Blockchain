@@ -35,6 +35,7 @@ func makeMuxRouter() http.Handler {
 	muxRouter := mux.NewRouter()
 	muxRouter.HandleFunc("/", handleGetBlockchain).Methods("GET", "OPTIONS")
 	muxRouter.HandleFunc("/longest", handleGetLongestBlockchain).Methods("GET", "OPTIONS")
+	muxRouter.HandleFunc("/potentialchains", handleGetPotentialChains).Methods("GET", "OPTIONS")
 	muxRouter.HandleFunc("/", handleWriteBlock).Methods("POST")
 	return muxRouter
 }
@@ -60,6 +61,22 @@ func handleGetBlockchain(w http.ResponseWriter, r *http.Request) {
 	} else {
 		bytes, err = json.MarshalIndent(Blockchain, "", "  ")
 	}
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	io.WriteString(w, string(bytes))
+}
+
+func handleGetPotentialChains(w http.ResponseWriter, r *http.Request) {
+	//YS: Enable CORS
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	var bytes []byte
+	var err error
+	bytes, err = json.MarshalIndent(potential_chains, "", "  ")
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>BC Blockchain</title>
+<style>
+  html {
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
+  }
+  .container {
+    white-space: nowrap;
+    overflow: scroll;
+  }
+
+  .container > div {
+    display: inline-block;
+    margin: 5px;
+    vertical-align: top;
+  }
+</style>
+
+  </head>
+  <body>
+<h2 style="margin-left:10px;">BC Blockchain</h2>
+  <div id="show-data" class="container" >
+
+
+	</div>
+    <!--script src="http://code.jquery.com/jquery-1.9.1.min.js"></script-->
+    <script>
+		function Get(nodeURL){
+			var Httpreq = new XMLHttpRequest(); // a new request
+			Httpreq.open("GET",nodeURL,false);
+			Httpreq.send(null);
+			return Httpreq.responseText;
+		}
+
+		function getTransactionsElement(obj){
+			var trans = document.createElement("DIV");
+			trans.style.cssText = "background-color:#ddd; margin-left:20px;";
+			var trancolor = "#ddd"
+			var counter = 0;
+			for (var key in obj) {
+				if (counter % 2 == 0) trancolor = "#eee";
+				else trancolor = "#ddd";
+				var tran = document.createElement("DIV");
+				tran.id = "tran_" + obj[key].TransactionId
+
+
+				tran.style.cssText = "background-color:" + trancolor;
+				var tran_id = document.createElement("DIV");
+				tran_id.style.cssText = "color:#0000FF;";
+				var tran_time = document.createElement("DIV");
+				tran_id.appendChild( document.createTextNode("TRAN_ID :         " + obj[key].TransactionId));
+				tran_time.appendChild( document.createTextNode("TIME :         " + obj[key].Timestamp));
+
+				tran.appendChild(tran_id);
+				tran.appendChild(tran_time);
+				trans.appendChild(tran);
+				counter++;
+			}
+			return trans;
+		}
+
+
+		var json_obj = JSON.parse(Get("http://localhost:8881/potentialchains"));
+		//var json_obj_str = JSON.stringify(json_obj);
+		//console.log("this is the blockchain: " + json_obj);
+
+		for (var chn in json_obj) {
+      var chain = document.createElement("DIV");
+      chain.id = "chain_" + chn;
+      chain.style.cssText = "border-style:dashed; border-style: solid; border-width: 2px; border-color: grey; margin:3px; padding:1px;";
+      chain.appendChild( document.createTextNode("chain_" + chn));
+      for (var key in json_obj[chn])
+  		  if (json_obj[chn].hasOwnProperty(key)) {
+    			var val = json_obj[chn][key];
+    			var block = document.createElement("DIV");
+    			block.id = "block_" + key
+    			block.style.cssText = "border-style:ridge; margin:10px; padding:10px;";
+    			var index = document.createElement("DIV");
+    			index.style.cssText = "font-size:20px; color:#FF0000;";
+    			var time = document.createElement("DIV");
+          var node_ip = document.createElement("DIV");
+    			var trans = document.createElement("DIV");
+    			var hash = document.createElement("DIV");
+    			var pre_hash = document.createElement("DIV");
+    			var nounce = document.createElement("DIV");
+
+    			index.appendChild( document.createTextNode("BLOCK #" + val.Index));
+    			//trans.appendChild( document.createTextNode(val.Transactions));
+          node_ip.appendChild( document.createTextNode("FROM NODE :         " + val.Node_ip));
+    			time.appendChild( document.createTextNode("TIME :         " + val.Timestamp));
+    			hash.appendChild( document.createTextNode("HASH :         " + val.Hash));
+    			pre_hash.appendChild( document.createTextNode("PRE_HASH :     " + val.PrevHash));
+    			nounce.appendChild( document.createTextNode("NOUNCE : " + val.Nounce));
+    			block.appendChild(index);
+          block.appendChild(node_ip);
+    			block.appendChild(time);
+    			block.appendChild(hash);
+    			block.appendChild(pre_hash);
+    			block.appendChild(nounce);
+    			block.appendChild(getTransactionsElement(val.Transactions));
+          chain.appendChild(block);
+  		  }
+        document.getElementById("show-data").appendChild(chain);
+      }
+
+
+  </script>
+  </body>
+</html>
