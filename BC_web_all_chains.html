@@ -16,7 +16,7 @@
   .container > div {
     display: inline-block;
     margin: 5px;
-    vertical-align: top;
+    vertical-align: bottom;
   }
 </style>
 
@@ -45,18 +45,18 @@
 				if (counter % 2 == 0) trancolor = "#eee";
 				else trancolor = "#ddd";
 				var tran = document.createElement("DIV");
-				tran.id = "tran_" + obj[key].TransactionId
-
-
+				tran.id = "tran_" + obj[key].TransactionId //div id
 				tran.style.cssText = "background-color:" + trancolor;
 				var tran_id = document.createElement("DIV");
 				tran_id.style.cssText = "color:#0000FF;";
 				var tran_time = document.createElement("DIV");
+        var tran_hash = document.createElement("DIV");
 				tran_id.appendChild( document.createTextNode("TRAN_ID :         " + obj[key].TransactionId));
-				tran_time.appendChild( document.createTextNode("TIME :         " + obj[key].Timestamp));
-
+				tran_time.appendChild( document.createTextNode("TIME :         " + obj[key].Timestamp.substring(0,22)));
+        tran_hash.appendChild( document.createTextNode("HASH :         " + obj[key].TransactionHash.substring(0,22)));
 				tran.appendChild(tran_id);
-				tran.appendChild(tran_time);
+      //  tran.appendChild(tran_hash);
+			//	tran.appendChild(tran_time);
 				trans.appendChild(tran);
 				counter++;
 			}
@@ -71,7 +71,7 @@
 		for (var chn in json_obj) {
       var chain = document.createElement("DIV");
       chain.id = "chain_" + chn;
-      chain.style.cssText = "border-style:dashed; border-style: solid; border-width: 2px; border-color: grey; margin:3px; padding:1px;";
+      chain.style.cssText = " padding:1px;";
       chain.appendChild( document.createTextNode("chain_" + chn));
       for (var key in json_obj[chn])
   		  if (json_obj[chn].hasOwnProperty(key)) {
@@ -91,9 +91,9 @@
     			index.appendChild( document.createTextNode("BLOCK #" + val.Index));
     			//trans.appendChild( document.createTextNode(val.Transactions));
           node_ip.appendChild( document.createTextNode("FROM NODE :         " + val.Node_ip));
-    			time.appendChild( document.createTextNode("TIME :         " + val.Timestamp));
-    			hash.appendChild( document.createTextNode("HASH :         " + val.Hash));
-    			pre_hash.appendChild( document.createTextNode("PRE_HASH :     " + val.PrevHash));
+    			time.appendChild( document.createTextNode("TIME :         " + val.Timestamp.substring(0,22)));
+    			hash.appendChild( document.createTextNode("HASH :         " + val.Hash.substring(0,10) + "..."));
+    			pre_hash.appendChild( document.createTextNode("PRE_HASH :     " + val.PrevHash.substring(0,10) + "..."));
     			nounce.appendChild( document.createTextNode("NOUNCE : " + val.Nounce));
     			block.appendChild(index);
           block.appendChild(node_ip);

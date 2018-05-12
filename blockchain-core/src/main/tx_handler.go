@@ -7,7 +7,18 @@ package main
 import (
 	"time"
 	"fmt"
+	"crypto/sha256"
+	"encoding/hex"
 )
+
+func get_tran_hash(tran Transaction) string{
+	record := tran.TransactionId + tran.Timestamp + tran.Msg
+	h := sha256.New()
+	h.Write([]byte(record))
+	hashed := h.Sum(nil)
+	returnValue := hex.EncodeToString(hashed)
+	return returnValue
+}
 
 //YS: this should trigger propagation of transactions
 

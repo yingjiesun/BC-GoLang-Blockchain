@@ -92,7 +92,7 @@ func handleGetLongestBlockchain(w http.ResponseWriter, r *http.Request) {
 
 	var bytes []byte
 	var err error
-	var longest_chain = getLongestChain()
+
 	replaceChain(longest_chain)
 
 	r.ParseForm()
